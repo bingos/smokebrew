@@ -12,7 +12,7 @@ use Archive::Extract;
 use URI;
 use Cwd         qw[chdir cwd];
 use IPC::Cmd    qw[run can_run];
-use File::Path  qw[mkpath];
+use File::Path  qw[mkpath rmtree];
 use vars        qw[$VERSION];
 
 
@@ -76,6 +76,12 @@ has 'verbose' => (
   default => 0,
 );
 
+has 'clean_up' => (
+  is => 'ro',
+  isa => 'Bool',
+  default => 1,
+);
+
 has 'make' => (
   is => 'ro',
   isa => subtype( 'Str' => where { can_run( $_ ) }, message { "Could not execute ($_)" } ),
@@ -111,6 +117,7 @@ sub build_perl {
   return unless $file;
   my $extract = $self->_extract( $file );
   return unless $extract;
+  unlink( $file ) if $self->clean_up();
   $self->prefix->mkpath();
   my $prefix = File::Spec->catdir( $self->prefix->absolute, $perl_version );
   {
@@ -128,6 +135,7 @@ sub build_perl {
     }
     return unless scalar run( command => [ $self->make, 'install' ], verbose => $self->verbose );
   }
+  rmtree( $extract ) if $self->clean_up();
   return $prefix;
 }
 
