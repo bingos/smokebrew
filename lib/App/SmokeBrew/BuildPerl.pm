@@ -171,3 +171,52 @@ __PACKAGE__->meta->make_immutable;
 qq[Building a perl];
 
 __END__
+
+=head1 NAME
+
+App::SmokeBrew::BuildPerl - build and install a particular version of Perl
+
+=head1 SYNOPSIS
+
+  use strict;
+  use warnings;
+  use App::SmokeBrew::BuildPerl;
+  
+  my $bp = App::SmokeBrew::BuildPerl->new(
+    version     => '5.12.0',
+    build_dir   => 'build',
+    prefix      => 'prefix',
+    skiptest    => 1,
+    verbose     => 1,
+    conf_opts   => [ '-Dusemallocwrap=y', '-Dusemymalloc=n' ],
+  );
+  
+  my $prefix = $bp->build_perl();
+  
+  print $prefix, "\n";
+
+=head1 DESCRIPTION
+
+App::SmokeBrew::BuildPerl 
+
+=head1 CONSTRUCTOR
+
+=head1 METHODS
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 SEE ALSO
+
+L<App::perlbrew>
+
+L<Module::CoreList>
+
+=cut
