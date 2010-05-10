@@ -8,10 +8,11 @@ $VERSION = '0.02';
 
 use Moose::Role;
 use Perl::Version;
+use Module::CoreList;
 use Moose::Util::TypeConstraints;
 
 subtype( 'PerlVersion', as 'Perl::Version',
-   where { defined $Module::CoreList::released{ Perl::Version->new($_)->numify() } },
+   where { ( my $ver = Perl::Version->new($_)->numify ) =~ s/_//g; defined $Module::CoreList::released{$ver} },
    message { "The version ($_) given is not a valid Perl version" },
 );
 
@@ -24,22 +25,10 @@ has 'version' => (
   coerce   => 1,
 );
 
-has '_normalised' => (
-  is => 'ro',
-  isa => 'Str',
-  init_arg   => undef,
-  lazy_build => 1,
-);
-
-sub _build__normalised {
-  my $version = Perl::Version->new( shift->version )->normal;
-  $version =~ s/^v//g;
-  return $version;
-}
-
 sub perl_version {
   my $self = shift;
-  my $pv = 'perl'.( $self->version->numify < 5.006 ? $self->version->numify : $self->version->normal );
+  ( my $numify = $self->version->numify ) =~ s/_//g;
+  my $pv = 'perl'.( $numify < 5.006 ? $self->version->numify : $self->version->normal );
   $pv =~ s/perlv/perl-/g;
   return $pv;
 }

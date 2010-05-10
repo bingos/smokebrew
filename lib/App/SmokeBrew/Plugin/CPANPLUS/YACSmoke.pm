@@ -13,7 +13,7 @@ $VERSION = '0.02';
 
 use Moose;
 
-with 'App::SmokeBrew::Plugin';
+with 'App::SmokeBrew::PerlVersion', 'App::SmokeBrew::Plugin';
 
 has '_cpanplus' => (
   is => 'ro',

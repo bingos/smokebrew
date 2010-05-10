@@ -26,6 +26,19 @@ use_ok('App::SmokeBrew::BuildPerl');
 
   isa_ok($bp,'App::SmokeBrew::BuildPerl');
   isa_ok($bp->version, 'Perl::Version');
-  is( $bp->_normalised, '5.10.1', 'The normalised version is okay');
+  is( $bp->perl_version, 'perl-5.10.1', 'The perl version is okay');
+}
+
+{
+  my $bp = App::SmokeBrew::BuildPerl->new(
+    version => '5.005_03',
+    build_dir => '.',
+    prefix => 'perl5.005_03',
+    conf_opts => ['-Dusethreads','-Duse64bitint'],
+  );
+
+  isa_ok($bp,'App::SmokeBrew::BuildPerl');
+  isa_ok($bp->version, 'Perl::Version');
+  is( $bp->perl_version, 'perl5.005_03', 'The perl version is okay');
 }
 

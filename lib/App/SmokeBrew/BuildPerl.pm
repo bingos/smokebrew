@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use App::SmokeBrew::Tools;
 use Log::Message::Simple qw[msg error];
-use Module::CoreList;
 use Perl::Version;
 use File::Spec;
 use File::chdir;
