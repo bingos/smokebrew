@@ -2,14 +2,12 @@ package App::SmokeBrew::BuildPerl;
 
 use strict;
 use warnings;
+use App::SmokeBrew::Tools;
 use Log::Message::Simple qw[msg error];
 use Module::CoreList;
 use Perl::Version;
 use File::Spec;
-use File::Fetch;
 use File::chdir;
-use Archive::Extract;
-use URI;
 use Cwd         qw[chdir cwd];
 use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
@@ -141,29 +139,19 @@ sub build_perl {
 
 sub _fetch {
   my $self = shift;
-  my $perldist = $self->perl_version . '.tar.gz';
-  my $stat;
-  foreach my $mirror ( @mirrors ) {
-    my $uri = URI->new( $mirror );
-    $uri->path_segments( ( grep { $_ } $uri->path_segments ), 'src', '5.0', $perldist );
-    msg("Fetching '" . $uri->as_string . "'", $self->verbose);
-    my $ff = File::Fetch->new( uri => $uri->as_string );
-    $stat = $ff->fetch( to => $self->build_dir->absolute );
-    last if $stat;
-    error("Failed to fetch '". $uri->as_string . "' '" . $ff->error . "'", $self->verbose);
-  }
+  my $perldist = 'src/5.0/' . $self->perl_version . '.tar.gz';
+  msg("Fetching '" . $perldist . "'", $self->verbose);
+  my $stat = App::SmokeBrew::Tools->fetch( $perldist, $self->build_dir->absolute );
+  return $stat if $stat;
+  error("Failed to fetch '". $perldist . "'", $self->verbose);
   return $stat;
 }
 
 sub _extract {
   my $self = shift;
   my $tarball = shift || return;
-  local $Archive::Extract::PREFER_BIN=1;
-  my $ae = Archive::Extract->new( archive => $tarball );
-  return unless $ae;
   msg("Extracting '$tarball'", $self->verbose);
-  return unless $ae->extract( to => $self->build_dir->absolute );
-  return $ae->extract_path();
+  return App::SmokeBrew::Tools->extract( $tarball, $self->build_dir->absolute );
 }
 
 sub _is_dev_release {
