@@ -12,41 +12,8 @@ use vars qw[$VERSION];
 $VERSION = '0.02';
 
 use Moose;
-use Moose::Util::TypeConstraints;
-use MooseX::Types::Path::Class qw[Dir File];
 
-has 'build_dir' => (
-  is => 'ro',
-  isa => Dir,
-  required => 1,
-  coerce => 1,
-);
-
-has 'prefix' => (
-  is => 'ro',
-  isa => Dir,
-  required => 1,
-  coerce => 1,
-);
-
-has 'perl_exe' => (
-  is => 'ro',
-  isa => File,
-  required => 1,
-  coerce => 1,
-);
-
-has 'clean_up' => (
-  is => 'ro',
-  isa => 'Bool',
-  default => 1,
-);
-
-has 'verbose' => (
-  is => 'ro',
-  isa => 'Bool',
-  default => 0,
-);
+with 'App::SmokeBrew::Plugin';
 
 has '_cpanplus' => (
   is => 'ro',
@@ -77,11 +44,30 @@ sub configure {
   msg("Fetching '" . $self->_cpanplus . "'", $self->verbose);
   my $loc = 'authors/id/' . $self->_cpanplus;
   my $fetch = App::SmokeBrew::Tools->fetch( $loc, $self->build_dir->absolute );
+  if ( $fetch ) {
+    msg("Fetched to '$fetch'", $self->verbose );
+  }
+  else {
+    error("Could not fetch '$loc'", $self->verbose );
+    return;
+  }
   return unless $fetch;
   msg("Extracting '$fetch'", $self->verbose);
   my $extract = App::SmokeBrew::Tools->extract( $fetch, $self->build_dir->absolute );
+  if ( $extract ) {
+    msg("Extracted to '$extract'", $self->verbose );
+  }
+  else {
+    error("Could not extract '$fetch'");
+    return;
+  }
   return unless $extract;
   unlink( $fetch ) if $self->clean_up();
+  my $perl = can_run( $self->perl_exe->absolute );
+  unless ( $perl ) {
+    error("Could not execute '" . $self->perl_exe->absolute . "'", $self->verbose );
+    return;
+  }
   {
     local $CWD = $extract;
     use IO::Handle;
@@ -89,8 +75,6 @@ sub configure {
     $boxed->autoflush(1);
     print $boxed $self->_boxed;
     close $boxed;
-    my $perl = can_run( $self->perl_exe );
-    return unless $perl;
     my $cmd = [ $perl, 'bin/boxer' ];
     return unless scalar run( command => $cmd, verbose => 1 );
   }
@@ -186,7 +170,26 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     }
 }
 
-{   $Module::Load::Conditional::CHECK_INC_HASH = 1;
+{   
+    $Module::Load::Conditional::CHECK_INC_HASH = 1;
+    use CPANPLUS::Backend;
+    my $cb = CPANPLUS::Backend->new( $ConfObj );
+    my $su = $cb->selfupdate_object;
+
+    $su->selfupdate( update => 'dependencies', latest => 1 );
+    $cb->module_tree( $_ )->install() for 
+      qw(
+          CPANPLUS
+          File::Temp
+          Compress::Raw::Bzip2
+          Compress::Raw::Zlib
+          Compress::Zlib
+          ExtUtils::CBuilder
+          ExtUtils::ParseXS
+          ExtUtils::Manifest
+          Module::Build
+      );
+    $_->install() for map { $su->modules_for_feature( $_ ) } qw(prefer_makefile md5 storable cpantest);
 }
 +;
 }
@@ -198,6 +201,3 @@ __PACKAGE__->meta->make_immutable;
 qq[Smokin'];
 
 __END__
-use strict;
-use warnings;
-
