@@ -27,19 +27,7 @@ use Moose;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir];
 
-subtype( 'PerlVersion', as 'Perl::Version',
-   where { defined $Module::CoreList::released{ Perl::Version->new($_)->numify() } },
-   message { "The version ($_) given is not a valid Perl version" },
-);
-
-coerce( 'PerlVersion', from 'Str', via { Perl::Version->new($_) } );
-
-has 'version' => (
-  is => 'ro',
-  isa => 'PerlVersion',
-  required => 1,
-  coerce   => 1,
-);
+with 'App::SmokeBrew::PerlVersion';
 
 has 'build_dir' => (
   is => 'ro',
@@ -86,26 +74,6 @@ has 'make' => (
   default => sub { can_run('make') },
 );
 
-has '_normalised' => (
-  is => 'ro',
-  isa => 'Str',
-  init_arg   => undef,
-  lazy_build => 1,
-);
-
-sub _build__normalised {
-  my $version = Perl::Version->new( shift->version )->normal;
-  $version =~ s/^v//g;
-  return $version;
-}
-
-sub perl_version {
-  my $self = shift;
-  my $pv = 'perl'.( $self->version->numify < 5.006 ? $self->version->numify : $self->version->normal );
-  $pv =~ s/perlv/perl-/g;
-  return $pv;
-}
-
 sub build_perl {
   my $self = shift;
   my $perl_version = $self->perl_version;
@@ -122,7 +90,7 @@ sub build_perl {
     local $CWD = $extract;
     mkpath( File::Spec->catdir( $prefix, 'bin' ) );
     my @conf_opts = $self->conf_opts;
-    push @conf_opts, '-Dusedevel' if $self->_is_dev_release();
+    push @conf_opts, '-Dusedevel' if $self->is_dev_release();
     unshift @conf_opts, '-Dprefix=' . $prefix;
     my $cmd = [ './Configure', '-des', @conf_opts ];
     return unless scalar run( command => $cmd,
@@ -152,12 +120,6 @@ sub _extract {
   my $tarball = shift || return;
   msg("Extracting '$tarball'", $self->verbose);
   return App::SmokeBrew::Tools->extract( $tarball, $self->build_dir->absolute );
-}
-
-sub _is_dev_release {
-  my $self = shift;
-  return 0 unless $self->version->numify >= 5.006;
-  return $self->version->version % 2;
 }
 
 no Moose;

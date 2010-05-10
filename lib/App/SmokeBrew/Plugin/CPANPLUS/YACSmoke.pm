@@ -78,6 +78,8 @@ sub configure {
     my $cmd = [ $perl, 'bin/boxer' ];
     return unless scalar run( command => $cmd, verbose => 1 );
   }
+  rmtree( $extract ) if $self->clean_up();
+  #my $conf = $self->prefix->absolute, 'conf', 
   return 1;
 }
 
