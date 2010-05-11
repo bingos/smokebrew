@@ -5,6 +5,7 @@ use warnings;
 use App::SmokeBrew::Tools;
 use File::chdir;
 use File::Fetch;
+use File::Spec;
 use IPC::Cmd qw[run can_run];
 use Log::Message::Simple qw[msg error];
 use vars qw[$VERSION];
@@ -12,14 +13,30 @@ use vars qw[$VERSION];
 $VERSION = '0.02';
 
 use Moose;
+use Moose::Util::TypeConstraints;
+use MooseX::Types::Moose qw[Str ArrayRef];
+use MooseX::Types::URI qw[to_Uri Uri];
 
 with 'App::SmokeBrew::PerlVersion', 'App::SmokeBrew::Plugin';
+
+# Thanks to Florian Ragwitz for this magic
+my $tc = subtype as ArrayRef[Uri]; 
+coerce $tc, from Str, via { [to_Uri($_)] }; 
+coerce $tc, from ArrayRef, via { [map { to_Uri($_) } @$_] };
 
 has '_cpanplus' => (
   is => 'ro',
   isa => 'Str',
   init_arg   => undef,
   lazy_build => 1,
+);
+
+has 'mirrors' => (
+  is => 'ro',
+  isa => $tc,
+  auto_deref => 1,
+  required => 1,
+  coerce => 1,
 );
 
 sub _build__cpanplus {
@@ -79,7 +96,21 @@ sub configure {
     return unless scalar run( command => $cmd, verbose => 1 );
   }
   rmtree( $extract ) if $self->clean_up();
-  #my $conf = $self->prefix->absolute, 'conf', 
+  my $conf = File::Spec->catdir( $self->prefix->absolute, 'conf', $self->perl_version );
+  {
+    local $ENV{APPDATA} = $conf;
+    my $cpconf = $self->_cpconf();
+    local $CWD = $self->build_dir->absolute;
+    use IO::Handle;
+    open my $boxed, '>', 'cpconf.pl' or die "$!\n";
+    $boxed->autoflush(1);
+    print $boxed $cpconf;
+    close $boxed;
+    my $cmd = [ $perl, 'cpconf.pl', '--email', $self->email ];
+    push @$cmd, ( '--mx', $self->mx ) if $self->mx;
+    return unless scalar run( command => $cmd, verbose => 1 );
+    unlink( 'cpconf.pl' ) if $self->clean_up();
+  }
   return 1;
 }
 
@@ -194,6 +225,52 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     $_->install() for map { $su->modules_for_feature( $_ ) } qw(prefer_makefile md5 storable cpantest);
 }
 +;
+}
+
+sub _cpconf {
+  my $self = shift;
+  my $cpconf = q+
+use strict;
+use warnings;
+use Getopt::Long;
+use CPANPLUS::Configure;
+
+my $mx;
+my $email;
+
+GetOptions( 'mx=s', \$mx, 'email=s', \$email );
+
+my $conf = CPANPLUS::Configure->new();
+$conf->set_conf( verbose => 1 );
+$conf->set_conf( cpantest => 'dont_cc' );
+$conf->set_conf( cpantest_mx => $mx ) if $mx;
+$conf->set_conf( email => $email );
+$conf->set_conf( makeflags => 'UNINST=1' );
+$conf->set_conf( buildflags => 'uninst=1' );
+$conf->set_conf( enable_custom_sources => 0 );
+$conf->set_conf( show_startup_tip => 0 );
+$conf->set_conf( write_install_logs => 0 );
+$conf->set_conf( hosts => +;
+  $cpconf .= $self->_mirrors() . ');';
+  $cpconf .= q+
+$conf->set_conf( hosts => $hosts );
+$conf->save();
+exit 0;
++;
+return $cpconf;
+}
+
+sub _mirrors {
+  my $self = shift;
+  my $mirrors = q{[ };
+  foreach my $uri ( $self->mirrors ) {
+    my $scheme = $uri->scheme;
+    my $host   = $uri->host;
+    my $path   = $uri->path || '/';
+    $mirrors .= qq!{ scheme => '$scheme', host => '$host', path => '$path' }, !;
+  }
+  $mirrors .= q{ ] };
+  return $mirrors;
 }
 
 no Moose;

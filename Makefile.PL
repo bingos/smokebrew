@@ -20,6 +20,7 @@ requires 'Module::CoreList' => '2.31';
 requires 'Moose' => '1.03';
 requires 'Moose::Util::TypeConstraints' => '1.03';
 requires 'MooseX::Types::Email' => '0.003';
+requires 'MooseX::Types::Moose' => '0.21';
 requires 'MooseX::Types::Path::Class' => '0.05';
 requires 'Parse::CPAN::Meta' => '1.40';
 requires 'Perl::Version' => '1.009';

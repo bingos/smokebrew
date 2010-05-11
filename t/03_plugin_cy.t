@@ -10,6 +10,7 @@ use_ok('App::SmokeBrew::Plugin::CPANPLUS::YACSmoke');
       prefix    => 'perl-5.10.1',
       email     => 'cpanplus@example.com',
       perl_exe  => $^X,
+      mirrors   => [ 'http://www.cpan.org', 'ftp://ftp.cpan.org/' ],
   );
   isa_ok($plugin,'App::SmokeBrew::Plugin::CPANPLUS::YACSmoke');
   ok( $plugin->_cpanplus, 'Found a CPANPLUS path' );
