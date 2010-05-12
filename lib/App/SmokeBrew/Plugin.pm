@@ -60,3 +60,87 @@ no Moose::Role;
 qq[Smokin'];
 
 __END__
+
+=head1 NAME
+
+App::SmokeBrew::Plugin - A Moose role for smokebrew plugins
+
+=head1 SYNOPSIS
+
+  package App::SmokeBrew::Plugin::Some::Plugin;
+
+  use Moose;
+
+  with 'App::SmokeBrew::Plugin';
+
+=head1 DESCRIPTION
+
+App::SmokeBrew::Plugin is a L<Moose> role that L<smokebrew> plugins must consume.
+
+=head1 ATTRIBUTES
+
+These are the attributes provided by the role and are expected by L<smokebrew>:
+
+=over
+
+=item C<email>
+
+A required attribute, this must be a valid email address as constrained by L<MooseX::Types::Email>
+
+=item C<build_dir>
+
+A required attribute, this is the working directory where builds can take place. It will be coerced
+into a L<Path::Class::Dir> object by L<MooseX::Types::Path::Class>.
+
+=item C<prefix>
+
+A required attribute, this is the prefix of the location where perl installs will be made, it will be coerced
+into a L<Path::Class::Dir> object by L<MooseX::Types::Path::Class>.
+
+example:
+
+  prefix = /home/cpan/pit/rel
+  perls will be installed as /home/cpan/pit/perl-5.12.0, /home/cpan/pit/perl-5.10.1, etc.
+
+=item C<perl_exe>
+
+A required attribute, this is the path to the perl executable that the plugin will configure, it will be
+coerced to a L<Path::Class::File> object by L<MooseX::Types::Path::Class>.
+
+=item C<mx>
+
+Optional attribute, which has no default value, this is the address or IP address of a mail exchanger to use
+for sending test reports.
+
+=item C<verbose>
+
+Optional boolean attribute, which defaults to 0, indicates whether the plugin should produce verbose output.
+
+=item C<clean_up>
+
+Optional boolean attribute, which defaults to 1, indicates whether the plugin should cleanup files that it 
+produces under the C<build_dir> or not.
+
+=back
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 SEE ALSO
+
+L<smokebrew>
+
+L<Moose::Role>
+
+L<MooseX::Types::Email>
+
+L<MooseX::Types::Path::Class>
+
+=cut

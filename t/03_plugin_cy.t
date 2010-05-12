@@ -14,4 +14,5 @@ use_ok('App::SmokeBrew::Plugin::CPANPLUS::YACSmoke');
   );
   isa_ok($plugin,'App::SmokeBrew::Plugin::CPANPLUS::YACSmoke');
   ok( $plugin->_cpanplus, 'Found a CPANPLUS path' );
+  isa_ok( $_, 'URI' ) for $plugin->mirrors;
 }

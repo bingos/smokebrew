@@ -5,6 +5,9 @@ use warnings;
 use Archive::Extract;
 use File::Fetch;
 use File::Spec;
+use List::MoreUtils qw[uniq];
+use Module::CoreList;
+use Perl::Version;
 use URI;
 use vars qw[$VERSION];
 
@@ -45,6 +48,56 @@ sub extract {
   return unless $ae;
   return unless $ae->extract( to => $loc );
   return $ae->extract_path();
+}
+
+sub perls {
+  my $type = shift;
+  $type = shift if $type->isa(__PACKAGE__);
+  return
+  uniq 
+  map { _format_version($_) } 
+  grep { 
+      if ( $type and $type eq 'rel' ) {
+          _is_rel($_) and !_is_ancient($_);
+      }
+      elsif ( $type and $type eq 'dev' ) {
+          _is_dev($_) and !_is_ancient($_);
+      }
+      else {
+          _is_dev($_) or _is_rel($_) and !_is_ancient($_);
+      }
+  }
+  map { Perl::Version->new($_) } 
+  sort keys %Module::CoreList::released;
+}
+
+sub _is_dev {
+  my $pv = shift;
+  return 0 if _is_ancient($pv);
+  return $pv->version % 2;
+}
+
+sub _is_rel {
+  my $pv = shift;
+  return 0 if _is_ancient($pv);
+  return !( $pv->version % 2 );
+}
+
+sub _is_ancient {
+  my $pv = shift;
+  ( my $numify = $pv->numify ) =~ s/_//g;
+  return 1 if $numify < 5.006;
+  return 0;
+}
+
+sub _format_version {
+  my $pv = shift;
+  my $numify = $pv->numify;
+  $numify =~ s/_//g;
+  return $pv if $numify < 5.006;
+  my $normal = $pv->normal();
+  $normal =~ s/^v//g;
+  return $normal;
 }
 
 qq[Smoke tools look what's inside of you];

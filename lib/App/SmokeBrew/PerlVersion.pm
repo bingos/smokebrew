@@ -9,14 +9,7 @@ $VERSION = '0.02';
 use Moose::Role;
 use Perl::Version;
 use Module::CoreList;
-use Moose::Util::TypeConstraints;
-
-subtype( 'PerlVersion', as 'Perl::Version',
-   where { ( my $ver = Perl::Version->new($_)->numify ) =~ s/_//g; defined $Module::CoreList::released{$ver} },
-   message { "The version ($_) given is not a valid Perl version" },
-);
-
-coerce( 'PerlVersion', from 'Str', via { Perl::Version->new($_) } );
+use App::SmokeBrew::Types qw[PerlVersion];
 
 has 'version' => (
   is => 'ro',

@@ -2,9 +2,108 @@ package App::SmokeBrew;
 
 use strict;
 use warnings;
+use Pod::Usage;
+use App::SmokeBrew::IniFile;
+use File::Spec;
+use Cwd;
+use Getopt::Long;
 use vars        qw[$VERSION];
 
 $VERSION = '0.02';
+
+my @mirrors = (
+  'http://cpan.hexten.net/',
+  'http://cpan.cpantesters.org/',
+  'ftp://ftp.funet.fi/pub/CPAN/',
+  'http://www.cpan.org/',
+);
+
+sub _smokebrew_dir {
+  return $ENV{PERL5_SMOKEBREW_DIR} 
+     if  exists $ENV{PERL5_SMOKEBREW_DIR} 
+     && defined $ENV{PERL5_SMOKEBREW_DIR};
+
+  my @os_home_envs = qw( APPDATA HOME USERPROFILE WINDIR SYS$LOGIN );
+
+  for my $env ( @os_home_envs ) {
+      next unless exists $ENV{ $env };
+      next unless defined $ENV{ $env } && length $ENV{ $env };
+      return $ENV{ $env } if -d $ENV{ $env };
+  }
+
+  return cwd();
+}
+
+
+
+use Moose;
+
+with 'MooseX::Getopt', 'MooseX::ConfigFromFile';
+
+use App::SmokeBrew::Types qw[ArrayRefUri];
+
+sub get_config_from_file {
+  my ($class,$file) = @_;
+  my $options_hashref = App::SmokeBrew::IniFile->read_file($file);
+  return $options_hashref->{_};
+}
+
+has 'configfile' => (
+  is => 'ro',
+  default => File::Spec->catfile( _smokebrew_dir(), '.smokebrew', 'smokebrew.cfg' ),
+);
+
+use MooseX::Types::Path::Class qw[Dir File];
+use MooseX::Types::Email qw[EmailAddress];
+
+has 'build_dir' => (
+  is => 'ro',
+  isa => Dir,
+  required => 1,
+  coerce => 1,
+);
+
+has 'prefix' => (
+  is => 'ro',
+  isa => Dir,
+  required => 1,
+  coerce => 1,
+);
+
+has 'email' => (
+  is => 'ro',
+  isa => EmailAddress,
+  required => 1,
+);
+
+has 'mx' => (
+  is => 'ro',
+  isa => 'Str',
+);
+
+has 'clean_up' => (
+  is => 'ro',
+  isa => 'Bool',
+  default => 1,
+);
+
+has 'verbose' => (
+  is => 'ro',
+  isa => 'Bool',
+  default => 0,
+);
+
+has 'mirrors' => (
+  is => 'ro',
+  isa => 'ArrayRefUri',
+  default => sub { \@mirrors },
+  auto_deref => 1,
+  coerce => 1,
+);
+
+q[Smokebrew, look what's inside of you];
+
+__END__
 
 =for comment
 
@@ -41,9 +140,3 @@ $VERSION = '0.02';
         - > Configure CPANPLUS (cpconf.pl)
 
 =cut
-
-q[Smokebrew, look what's inside of you];
-
-__END__
-
-

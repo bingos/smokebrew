@@ -13,16 +13,10 @@ use vars qw[$VERSION];
 $VERSION = '0.02';
 
 use Moose;
-use Moose::Util::TypeConstraints;
-use MooseX::Types::Moose qw[Str ArrayRef];
-use MooseX::Types::URI qw[to_Uri Uri];
 
 with 'App::SmokeBrew::PerlVersion', 'App::SmokeBrew::Plugin';
 
-# Thanks to Florian Ragwitz for this magic
-my $tc = subtype as ArrayRef[Uri]; 
-coerce $tc, from Str, via { [to_Uri($_)] }; 
-coerce $tc, from ArrayRef, via { [map { to_Uri($_) } @$_] };
+use App::SmokeBrew::Types qw[ArrayRefUri];
 
 has '_cpanplus' => (
   is => 'ro',
@@ -33,7 +27,7 @@ has '_cpanplus' => (
 
 has 'mirrors' => (
   is => 'ro',
-  isa => $tc,
+  isa => 'ArrayRefUri',
   auto_deref => 1,
   required => 1,
   coerce => 1,
