@@ -9,6 +9,7 @@ license 'perl';
 auto_license holder => 'Chris Williams';
 perl_version '5.006';
 build_requires 'Test::More' => 0.47;
+build_requires 'File::Temp' => '0.22';
 requires 'Archive::Extract' => '0.38';
 requires 'Config::INI::Reader' => '0.014';
 requires 'File::chdir' => '0.1003';

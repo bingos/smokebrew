@@ -34,8 +34,6 @@ sub _smokebrew_dir {
   return cwd();
 }
 
-
-
 use Moose;
 
 with 'MooseX::Getopt', 'MooseX::ConfigFromFile';
