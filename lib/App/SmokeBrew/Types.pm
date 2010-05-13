@@ -14,6 +14,9 @@ use Moose::Util::TypeConstraints;
 use MooseX::Types::Moose qw[Str ArrayRef];
 use MooseX::Types::URI qw[to_Uri Uri];
 
+use Module::CoreList;
+use Perl::Version;
+
 # Thanks to Florian Ragwitz for this magic
 
 subtype 'ArrayRefUri', as ArrayRef[Uri];
