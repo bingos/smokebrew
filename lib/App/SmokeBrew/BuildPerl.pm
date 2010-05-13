@@ -163,6 +163,8 @@ Creates a new App::SmokeBrew::BuildPerl object. Takes a number of options.
 
 =item C<version>
 
+A required attribute, this is the version of perl to install. Must be a valid perl version.
+
 =item C<build_dir>
 
 A required attribute, this is the working directory where builds can take place. It will be coerced

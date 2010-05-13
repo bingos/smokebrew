@@ -215,6 +215,7 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
           ExtUtils::ParseXS
           ExtUtils::Manifest
           Module::Build
+          CPANPLUS::YACSmoke
       );
     $_->install() for map { $su->modules_for_feature( $_ ) } qw(prefer_makefile md5 storable cpantest);
 }

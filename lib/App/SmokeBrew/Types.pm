@@ -40,3 +40,83 @@ coerce( 'ArrayRefStr', from 'Str', via { [ $_ ] } );
 qq[Smokin'];
 
 __END__
+
+=head1 NAME
+
+App::SmokeBrew::Types - Moose types for smokebrew
+
+=head1 SYNOPSIS
+
+  use App::SmokeBrew::Types qw[ArrayRefUri PerlVersion ArrayRefStr];
+
+  has 'version' => (
+    is      => 'ro',
+    isa     => 'PerlVersion',
+    coerce  => 1,
+  );
+
+  has 'things' => (
+    is      => 'ro',
+    isa     => 'ArrayRefStr',
+    coerce  => 1,
+  );
+
+  has 'websites' => (
+    is      => 'ro',
+    isa     => 'ArrayRefUri',
+    coerce  => 1,
+  );
+
+=head1 DESCRIPTION
+
+App::SmokeBrew::Types is a library of L<Moose> types for L<smokebrew>.
+
+=head1 TYPES
+
+It provides the following types:
+
+=over
+
+=item C<PerlVersion>
+
+A L<Perl::Version> object.
+
+Coerced from C<Str> via C<new> in L<Perl::Version>
+
+Constrained to existing in L<Module::CoreList> C<released> and being >= C<5.006>
+
+=item C<ArrayRefUri>
+
+An arrayref of L<URI> objects.
+
+Coerces from <Str> and C<ArrayRef[Str]> via L<MooseX::Types::URI>
+
+=item C<ArrayRefStr>
+
+An arrayref of C<Str>.
+
+Coerces from C<Str>.
+
+=back
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+with thanks to Florian Ragwitz for the L<MooseX::Types::URI> sugar.
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 SEE ALSO
+
+L<URI>
+
+L<Perl::Version>
+
+L<MooseX::Types::URI>
+
+=cut
