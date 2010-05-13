@@ -7,7 +7,7 @@ use vars qw[$VERSION];
 $VERSION = '0.02';
 
 use MooseX::Types
-    -declare => [qw(ArrayRefUri PerlVersion)];
+    -declare => [qw(ArrayRefUri PerlVersion ArrayRefStr)];
 
 use Moose::Util::TypeConstraints;
 
@@ -24,6 +24,8 @@ subtype 'ArrayRefUri', as ArrayRef[Uri];
 coerce 'ArrayRefUri', from Str, via { [to_Uri($_)] };
 coerce 'ArrayRefUri', from ArrayRef, via { [map { to_Uri($_) } @$_] };
 
+# This is my own magic
+
 subtype( 'PerlVersion', as 'Perl::Version',
    where { ( my $ver = Perl::Version->new($_)->numify ) =~ s/_//g; 
             defined $Module::CoreList::released{$ver} and $ver >= 5.006 },
@@ -31,6 +33,9 @@ subtype( 'PerlVersion', as 'Perl::Version',
 );
 
 coerce( 'PerlVersion', from 'Str', via { Perl::Version->new($_) } );
+
+subtype( 'ArrayRefStr', as ArrayRef[Str] );
+coerce( 'ArrayRefStr', from 'Str', via { [ $_ ] } );
 
 qq[Smokin'];
 

@@ -50,6 +50,22 @@ sub extract {
   return $ae->extract_path();
 }
 
+sub smokebrew_dir {
+  return $ENV{PERL5_SMOKEBREW_DIR}
+     if  exists $ENV{PERL5_SMOKEBREW_DIR}
+     && defined $ENV{PERL5_SMOKEBREW_DIR};
+
+  my @os_home_envs = qw( APPDATA HOME USERPROFILE WINDIR SYS$LOGIN );
+
+  for my $env ( @os_home_envs ) {
+      next unless exists $ENV{ $env };
+      next unless defined $ENV{ $env } && length $ENV{ $env };
+      return $ENV{ $env } if -d $ENV{ $env };
+  }
+
+  return cwd();
+}
+
 sub perls {
   my $type = shift;
   $type = shift if $type->isa(__PACKAGE__);

@@ -36,3 +36,10 @@ use App::SmokeBrew::Tools;
     is( ( scalar grep { !( $_->version % 2 ) } @pvs ), scalar @rels, 'They are all dev releases' );
   }
 }
+
+{
+  my $cwd = File::Spec->rel2abs('.');
+  local $ENV{PERL5_SMOKEBREW_DIR} = $cwd;
+  my $smdir = App::SmokeBrew::Tools->smokebrew_dir();
+  is( $smdir, $cwd, 'The smokebrew_dir is okay' );
+}

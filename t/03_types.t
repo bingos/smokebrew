@@ -1,7 +1,7 @@
 package Test::Types;
 
 use Moose;
-use App::SmokeBrew::Types qw[PerlVersion ArrayRefUri];
+use App::SmokeBrew::Types qw[PerlVersion ArrayRefUri ArrayRefStr];
 
 has 'version' => (
   is => 'ro',
@@ -14,6 +14,12 @@ has 'mirrors' => (
   isa => 'ArrayRefUri',
   coerce => 1,
   auto_deref => 1,
+);
+
+has 'perlargs' => (
+  is => 'ro',
+  isa => 'ArrayRefStr',
+  coerce => 1,
 );
 
 no Moose;
@@ -65,4 +71,13 @@ use Test::More qw[no_plan];
 {
   my $obj = Test::Types->new( mirrors => [ 'http://www.cpan.org/', 'ftp://ftp.funet.fi/pub/CPAN/' ] );
   isa_ok( $_, 'URI' ) for $obj->mirrors;
+}
+
+############
+# perlargs #
+############
+
+{
+  my $obj = Test::Types->new( perlargs => '-Dusemallocwrap=y' );
+  is( ref $obj->perlargs, 'ARRAY', 'It was coerced to an arrayref' );
 }

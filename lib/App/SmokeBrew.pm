@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Pod::Usage;
 use App::SmokeBrew::IniFile;
+use App::SmokeBrew::Tools;
 use File::Spec;
 use Cwd;
 use Getopt::Long;
@@ -18,27 +19,11 @@ my @mirrors = (
   'http://www.cpan.org/',
 );
 
-sub _smokebrew_dir {
-  return $ENV{PERL5_SMOKEBREW_DIR} 
-     if  exists $ENV{PERL5_SMOKEBREW_DIR} 
-     && defined $ENV{PERL5_SMOKEBREW_DIR};
-
-  my @os_home_envs = qw( APPDATA HOME USERPROFILE WINDIR SYS$LOGIN );
-
-  for my $env ( @os_home_envs ) {
-      next unless exists $ENV{ $env };
-      next unless defined $ENV{ $env } && length $ENV{ $env };
-      return $ENV{ $env } if -d $ENV{ $env };
-  }
-
-  return cwd();
-}
-
 use Moose;
 
 with 'MooseX::Getopt', 'MooseX::ConfigFromFile';
 
-use App::SmokeBrew::Types qw[ArrayRefUri];
+use App::SmokeBrew::Types qw[ArrayRefUri ArrayRefStr];
 
 sub get_config_from_file {
   my ($class,$file) = @_;
@@ -48,7 +33,7 @@ sub get_config_from_file {
 
 has 'configfile' => (
   is => 'ro',
-  default => File::Spec->catfile( _smokebrew_dir(), '.smokebrew', 'smokebrew.cfg' ),
+  default => File::Spec->catfile( App::SmokeBrew::Tools->smokebrew_dir(), '.smokebrew', 'smokebrew.cfg' ),
 );
 
 use MooseX::Types::Path::Class qw[Dir File];
@@ -96,6 +81,12 @@ has 'mirrors' => (
   isa => 'ArrayRefUri',
   default => sub { \@mirrors },
   auto_deref => 1,
+  coerce => 1,
+);
+
+has 'perlargs' => (
+  is => 'ro',
+  isa => 'ArrayRefStr',
   coerce => 1,
 );
 

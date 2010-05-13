@@ -26,3 +26,71 @@ sub set_value {
 qq[Smokin'];
 
 __END__
+
+=head1 NAME
+
+App::SmokeBrew::IniFile - Parse the smokebrew configuration file
+
+=head1 SYNOPSIS
+
+  use App::SmokeBrew::IniFile;
+
+  my $cfg = App::SmokeBrew::IniFile->read_file( 'smokebrew.cfg' );
+
+=head1 DESCRIPTION
+
+App::SmokeBrew::IniFile is a subclass of L<Config::INI::Reader> which supports
+multi-valued parameters. Parameters which are specified multiple times will become
+an C<arrayref> in the resultant C<hashref> structure that is produced.
+
+=head1 METHODS
+
+This subclass overrides one of the L<Config::INI::Reader> methods:
+
+=over
+
+=item C<set_value>
+
+This method is overriden to support multi-valued parameters. If a parameter is specified multiple
+times the INI file it will become an C<arrayref>.
+
+  If 'foo.ini' contains:
+
+    dir=/home/foo
+    mirror=http://some.mirror.com/
+    mirror=ftp://some.other.mirror.org/CPAN/
+
+  my $cfg = App::SmokeBrew::IniFile->read_file( 'foo.ini' );
+
+    $cfg = {
+              '_'  => {
+                          dir => '/home/foo',
+
+                          mirrors => [
+                                        'http://some.mirror.com/',
+                                        'ftp://some.other.mirror.org/CPAN/',
+                          ],
+              },
+           }
+
+=back
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 KUDOS
+
+Thanks to Ricardo Signes for pointing out his awesome module to me.
+
+=head1 SEE ALSO
+
+L<Config::INI::Reader>
+
+=cut
