@@ -38,8 +38,8 @@ has 'prefix' => (
 
 has 'perlargs' => (
   is => 'ro',
-  required => 1,
   isa => 'ArrayRefStr',
+  default => sub { [] },
   auto_deref => 1,
 );
 
@@ -148,11 +148,73 @@ App::SmokeBrew::BuildPerl - build and install a particular version of Perl
 
 =head1 DESCRIPTION
 
-App::SmokeBrew::BuildPerl 
+App::SmokeBrew::BuildPerl encapsulates the task of configuring, building, testing and installing 
+a perl executable ( and associated core modules ).
 
 =head1 CONSTRUCTOR
 
+=over
+
+=item C<new>
+
+Creates a new App::SmokeBrew::BuildPerl object. Takes a number of options.
+
+=over
+
+=item C<version>
+
+=item C<build_dir>
+
+A required attribute, this is the working directory where builds can take place. It will be coerced
+into a L<Path::Class::Dir> object by L<MooseX::Types::Path::Class>.
+
+=item C<prefix>
+
+A required attribute, this is the prefix of the location where perl installs will be made, it will be coerced
+into a L<Path::Class::Dir> object by L<MooseX::Types::Path::Class>.
+
+example:
+
+  prefix = /home/cpan/pit/rel
+  perls will be installed as /home/cpan/pit/perl-5.12.0, /home/cpan/pit/perl-5.10.1, etc.
+
+=item C<skiptest>
+
+Optional boolean attribute, which defaults to 0, indicates whether the testing phase of the perl installation
+( C<make test> ) should be skipped or not.
+
+=item C<perlopts>
+
+Optional attribute, takes an arrayref of perl configuration flags that will be passed to C<Configure>.
+There is no need to specify C<-Dprefix> or C<-Dusedevel> as the module handles these for you.
+
+  perlopts => [ '-Dusethreads', '-Duse64bitint' ],
+
+=item C<verbose>
+
+Optional boolean attribute, which defaults to 0, indicates whether we should produce verbose output.
+
+=item C<clean_up>
+
+Optional boolean attribute, which defaults to 1, indicates whether we should cleanup files that we
+produce under the C<build_dir> or not.
+
+=item C<make>
+
+Optional attribute to specify the C<make> utility to use. Defaults to C<make> and you should only have to
+mess with this on wacky platforms.
+
+=back
+
+=back
+
 =head1 METHODS
+
+=over
+
+=item C<build_perl>
+
+=back
 
 =head1 AUTHOR
 
