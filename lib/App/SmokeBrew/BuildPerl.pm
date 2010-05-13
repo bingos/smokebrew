@@ -15,16 +15,10 @@ use vars        qw[$VERSION];
 
 $VERSION = '0.02';
 
-my @mirrors = (
-  'http://cpan.hexten.net/',
-  'http://cpan.cpantesters.org/',
-  'ftp://ftp.funet.fi/pub/CPAN/',
-  'http://www.cpan.org/',
-);
-
 use Moose;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir];
+use App::SmokeBrew::Types qw[ArrayRefStr];
 
 with 'App::SmokeBrew::PerlVersion';
 
@@ -42,10 +36,10 @@ has 'prefix' => (
   coerce => 1,
 );
 
-has 'conf_opts' => (
+has 'perlargs' => (
   is => 'ro',
   required => 1,
-  isa => 'ArrayRef[Str]',
+  isa => 'ArrayRefStr',
   auto_deref => 1,
 );
 
@@ -88,7 +82,7 @@ sub build_perl {
   {
     local $CWD = $extract;
     mkpath( File::Spec->catdir( $prefix, 'bin' ) );
-    my @conf_opts = $self->conf_opts;
+    my @conf_opts = $self->perlargs;
     push @conf_opts, '-Dusedevel' if $self->is_dev_release();
     unshift @conf_opts, '-Dprefix=' . $prefix;
     my $cmd = [ './Configure', '-des', @conf_opts ];
@@ -145,7 +139,7 @@ App::SmokeBrew::BuildPerl - build and install a particular version of Perl
     prefix      => 'prefix',
     skiptest    => 1,
     verbose     => 1,
-    conf_opts   => [ '-Dusemallocwrap=y', '-Dusemymalloc=n' ],
+    perlargs    => [ '-Dusemallocwrap=y', '-Dusemymalloc=n' ],
   );
   
   my $prefix = $bp->build_perl();

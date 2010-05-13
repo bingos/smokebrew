@@ -10,7 +10,7 @@ use_ok('App::SmokeBrew::BuildPerl');
       version => '6.10.1',
       build_dir => '.',
       prefix => 'perl-5.10.1',
-      conf_opts => ['-Dusethreads','-Duse64bitint'],
+      perlargs => ['-Dusethreads','-Duse64bitint'],
     );
   };
   like( $@, qr/given is not a valid Perl version/s, q{We didn't like the version given} );
@@ -21,7 +21,7 @@ use_ok('App::SmokeBrew::BuildPerl');
     version => '5.10.1',
     build_dir => '.',
     prefix => 'perl-5.10.1',
-    conf_opts => ['-Dusethreads','-Duse64bitint'],
+    perlargs => ['-Dusethreads','-Duse64bitint'],
   );
 
   isa_ok($bp,'App::SmokeBrew::BuildPerl');
@@ -35,7 +35,7 @@ use_ok('App::SmokeBrew::BuildPerl');
       version => '5.005_03',
       build_dir => '.',
       prefix => 'perl5.005_03',
-      conf_opts => ['-Dusethreads','-Duse64bitint'],
+      perlargs => ['-Dusethreads','-Duse64bitint'],
     );
   };
   like( $@, qr/given is not a valid Perl version/s, q{We didn't like the version given} );
