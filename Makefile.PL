@@ -19,6 +19,7 @@ requires 'File::Spec' => '3.31';
 requires 'IPC::Cmd' => '0.58';
 requires 'Log::Message::Simple' => '0.06';
 requires 'Module::CoreList' => '2.31';
+requires 'Module::Pluggable' => '3.9';
 requires 'Moose' => '1.03';
 requires 'Moose::Util::TypeConstraints' => '1.03';
 requires 'MooseX::ConfigFromFile' => '0.02';

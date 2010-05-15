@@ -12,7 +12,7 @@ use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
 use vars        qw[$VERSION];
 
-$VERSION = '0.02';
+$VERSION = '0.01_01';
 
 use Moose;
 use Moose::Util::TypeConstraints;
