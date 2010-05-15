@@ -5,6 +5,7 @@ use warnings;
 use Pod::Usage;
 use App::SmokeBrew::IniFile;
 use App::SmokeBrew::Tools;
+use Module::Pluggable search_path => 'App::SmokeBrew::Plugin'; # except => 'POE::Compone
 use File::Spec;
 use Cwd;
 use Getopt::Long;
@@ -33,7 +34,13 @@ sub get_config_from_file {
 
 has 'configfile' => (
   is => 'ro',
-  default => File::Spec->catfile( App::SmokeBrew::Tools->smokebrew_dir(), '.smokebrew', 'smokebrew.cfg' ),
+  default => sub { 
+      my $file = File::Spec->catfile( 
+          App::SmokeBrew::Tools->smokebrew_dir(), 
+          '.smokebrew', 'smokebrew.cfg' );
+      return unless -e $file;
+      return $file;
+  },
 );
 
 use MooseX::Types::Path::Class qw[Dir File];
@@ -91,6 +98,11 @@ has 'perlargs' => (
 );
 
 q[Smokebrew, look what's inside of you];
+
+sub run {
+  my $self = shift;
+  print $_, "\n" for $self->plugins;
+}
 
 __END__
 

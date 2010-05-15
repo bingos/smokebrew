@@ -12,7 +12,6 @@ use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
 use vars        qw[$VERSION];
 
-
 $VERSION = '0.02';
 
 use Moose;
@@ -215,6 +214,11 @@ mess with this on wacky platforms.
 =over
 
 =item C<build_perl>
+
+Fetches, extracts, configures, builds, tests (see C<skiptest>) and installs the C<perl> executable.
+
+The C<build_dir> is used for the first five processes. Installation is made into the given C<prefix> 
+directory.
 
 =back
 

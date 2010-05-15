@@ -9,7 +9,6 @@ use App::SmokeBrew::Tools;
 
 {
   my $tmpdir = tempdir( DIR => '.', CLEANUP => 1 );
-  my $file = 'RECENT';
   my $foo = App::SmokeBrew::Tools->fetch('authors/01mailrc.txt.gz', $tmpdir);
   ok( $foo, 'Foo is okay' );
   ok( -e $foo, 'The file exists' );

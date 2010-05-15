@@ -214,6 +214,8 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
           ExtUtils::CBuilder
           ExtUtils::ParseXS
           ExtUtils::Manifest
+          ExtUtils::MakeMaker
+          Log::Message::Simple
           Module::Build
           CPANPLUS::YACSmoke
       );

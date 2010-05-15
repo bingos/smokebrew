@@ -25,10 +25,13 @@ sub fetch {
   $fetch = shift if $fetch->isa(__PACKAGE__);
   return unless $fetch;
   my $loc = shift || return;
+  my $mirrors = shift;
+  $mirrors = \@mirrors unless 
+    $mirrors and ref $mirrors eq 'ARRAY' and scalar @{ $mirrors };
   $loc = File::Spec->rel2abs($loc);
   my $stat;
-  foreach my $mirror ( @mirrors ) {
-    my $uri = URI->new( $mirror );
+  foreach my $mirror ( @{ $mirrors } ) {
+    my $uri = URI->new( ( $mirror->isa('URI') ? $mirror->as_string : $mirror ) );
     $uri->path_segments( ( grep { $_ } $uri->path_segments ), split(m!/!, $fetch) );
     my $ff = File::Fetch->new( uri => $uri->as_string );
     $stat = $ff->fetch( to => $loc );
@@ -119,3 +122,91 @@ sub _format_version {
 qq[Smoke tools look what's inside of you];
 
 __END__
+
+=head1 NAME
+
+App::SmokeBrew::Tools - Various utility functions for smokebrew
+
+=head1 SYNOPSIS
+
+  use strict;
+  use warnings;
+  use App::SmokeBrew::Tools;
+
+  # Fetch a perl source tarball
+  my $filename = App::SmokeBrew::Tools->fetch( $path_to_fetch, $where_to_fetch_to );
+
+  # Extract a tarball
+  my $extracted_loc = App::SmokeBrew::Tools->extract( $tarball, $where_to_extract_to );
+
+  # Find the smokebrew directory
+  my $dir = App::SmokeBrew::Tools->smokebrew_dir();
+
+  # Obtain a list of perl versions
+  my @perls = App::SmokeBrew::Tools->perls(); # All perls >= 5.006
+
+  my @stables = App::SmokeBrew::Tools->perls( 'rel' );
+
+  my @devs = App::SmokeBrew::Tools->perls( 'dev' );
+
+=head1 DESCRIPTION
+
+App::SmokeBrew::Tools provides a number of utility functions for L<smokebrew>.
+
+=head1 FUNCTIONS
+
+=over
+
+=item C<fetch>
+
+Requires two mandatory parameters and one optional. The first two parameters are the path to
+fetch from a CPAN mirror and the file system path where you want the file fetched to.
+The third, optional parameter, is an arrayref of CPAN mirrors that you wish the file to fetched from.
+
+Returns the path to the fetched file on success, false otherwise.
+
+This function is a wrapper around L<File::Fetch>.
+
+=item C<extract>
+
+Requires two mandatory parameters, the path to a file that you wish to be extracted and the file system
+path of where you wish the file to be extracted to. Returns the path to the extracted file on success,
+false otherwise.
+
+This function is a wrapper around L<Archive::Extract>.
+
+=item C<smokebrew_dir>
+
+Returns the path to where the C<.smokebrew> directory may be found.
+
+=item C<perls>
+
+Returns a list of perl versions. Without a parameter returns all perl releases >= 5.006
+
+Specifying C<rel> as the parameter will return all C<stable> perl releases >= 5.006
+
+Specifying C<dev> as the parameter will return only the C<development> perl releases >= 5.006
+
+=back
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 SEE ALSO
+
+L<smokebrew>
+
+L<Perl::Version>
+
+L<File::Fetch>
+
+L<Archive::Extract>
+
+=cut
