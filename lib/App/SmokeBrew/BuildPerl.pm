@@ -22,7 +22,7 @@ use App::SmokeBrew::Types qw[ArrayRefStr];
 
 with 'App::SmokeBrew::PerlVersion';
 
-has 'build_dir' => (
+has 'builddir' => (
   is => 'ro',
   isa => Dir,
   required => 1,
@@ -55,10 +55,10 @@ has 'verbose' => (
   default => 0,
 );
 
-has 'clean_up' => (
+has 'noclean' => (
   is => 'ro',
   isa => 'Bool',
-  default => 1,
+  default => 0,
 );
 
 has 'make' => (
@@ -71,12 +71,12 @@ sub build_perl {
   my $self = shift;
   my $perl_version = $self->perl_version;
   msg(sprintf("Starting build for '%s'",$perl_version), $self->verbose);
-  $self->build_dir->mkpath();
+  $self->builddir->mkpath();
   my $file = $self->_fetch();
   return unless $file;
   my $extract = $self->_extract( $file );
   return unless $extract;
-  unlink( $file ) if $self->clean_up();
+  unlink( $file ) if $self->noclean();
   $self->prefix->mkpath();
   my $prefix = File::Spec->catdir( $self->prefix->absolute, $perl_version );
   msg('Applying any applicable patches to the source', $self->verbose );
@@ -96,7 +96,7 @@ sub build_perl {
     }
     return unless scalar run( command => [ $self->make, 'install' ], verbose => $self->verbose );
   }
-  rmtree( $extract ) if $self->clean_up();
+  rmtree( $extract ) if $self->noclean();
   return $prefix;
 }
 
@@ -104,7 +104,7 @@ sub _fetch {
   my $self = shift;
   my $perldist = 'src/5.0/' . $self->perl_version . '.tar.gz';
   msg("Fetching '" . $perldist . "'", $self->verbose);
-  my $stat = App::SmokeBrew::Tools->fetch( $perldist, $self->build_dir->absolute );
+  my $stat = App::SmokeBrew::Tools->fetch( $perldist, $self->builddir->absolute );
   return $stat if $stat;
   error("Failed to fetch '". $perldist . "'", $self->verbose);
   return $stat;
@@ -114,7 +114,7 @@ sub _extract {
   my $self = shift;
   my $tarball = shift || return;
   msg("Extracting '$tarball'", $self->verbose);
-  return App::SmokeBrew::Tools->extract( $tarball, $self->build_dir->absolute );
+  return App::SmokeBrew::Tools->extract( $tarball, $self->builddir->absolute );
 }
 
 no Moose;
@@ -137,7 +137,7 @@ App::SmokeBrew::BuildPerl - build and install a particular version of Perl
   
   my $bp = App::SmokeBrew::BuildPerl->new(
     version     => '5.12.0',
-    build_dir   => 'build',
+    builddir   => 'build',
     prefix      => 'prefix',
     skiptest    => 1,
     verbose     => 1,
@@ -167,7 +167,7 @@ Creates a new App::SmokeBrew::BuildPerl object. Takes a number of options.
 
 A required attribute, this is the version of perl to install. Must be a valid perl version.
 
-=item C<build_dir>
+=item C<builddir>
 
 A required attribute, this is the working directory where builds can take place. It will be coerced
 into a L<Path::Class::Dir> object by L<MooseX::Types::Path::Class>.
@@ -198,10 +198,10 @@ There is no need to specify C<-Dprefix> or C<-Dusedevel> as the module handles t
 
 Optional boolean attribute, which defaults to 0, indicates whether we should produce verbose output.
 
-=item C<clean_up>
+=item C<noclean>
 
-Optional boolean attribute, which defaults to 1, indicates whether we should cleanup files that we
-produce under the C<build_dir> or not.
+Optional boolean attribute, which defaults to 0, indicates whether we should cleanup files that we
+produce under the C<builddir> or not.
 
 =item C<make>
 
@@ -220,7 +220,7 @@ mess with this on wacky platforms.
 
 Fetches, extracts, configures, builds, tests (see C<skiptest>) and installs the C<perl> executable.
 
-The C<build_dir> is used for the first five processes. Installation is made into the given C<prefix> 
+The C<builddir> is used for the first five processes. Installation is made into the given C<prefix> 
 directory.
 
 =back

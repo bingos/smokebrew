@@ -6,7 +6,7 @@ use App::SmokeBrew::IniFile;
 
 {
   my ($fh, $filename) = tempfile( DIR => '.', UNLINK => 1);
-  print $fh "build_dir=/home/moo/cow/\n";
+  print $fh "builddir=/home/moo/cow/\n";
   print $fh "prefix=/home/moo/perls/\n";
   print $fh "mirrors=http://cpan.mirror.local/\n";
   print $fh "mirrors=ftp://cpan.perl.org/CPAN/\n";
@@ -16,7 +16,7 @@ use App::SmokeBrew::IniFile;
   ok( exists $cfg->{_}, 'The underscore section exsists' );
   my $under = $cfg->{_};
   is( ref $under, 'HASH', 'The underscore section is a hashref' );
-  is( $under->{build_dir}, '/home/moo/cow/', 'build_dir was okay' );
+  is( $under->{builddir}, '/home/moo/cow/', 'builddir was okay' );
   is( $under->{prefix}, '/home/moo/perls/', 'prefix was okay' );
   is( ref $under->{mirrors}, 'ARRAY', 'The mirrors part is an arrayref' );
   is( scalar @{ $under->{mirrors} }, 2, 'There are two elements in the arrayref' );

@@ -4,7 +4,7 @@ use App::SmokeBrew::BuildPerl;
 
 my $bp = App::SmokeBrew::BuildPerl->new(
   version     => '5.12.0',
-  build_dir   => 'dist/build',
+  builddir   => 'dist/build',
   prefix      => 'dist/prefix',
   skiptest    => 1,
   verbose     => 1,

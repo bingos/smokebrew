@@ -14,7 +14,7 @@ smokebrew - Automated Perl building and installation for CPAN Testers
 
 =head1 SYNOPSIS
 
-  smokebrew --email tester@cpan.org --build_dir /home/tester/pit/build --prefix /home/tester/pit/rel \
+  smokebrew --email tester@cpan.org --builddir /home/tester/pit/build --prefix /home/tester/pit/rel \
             --perlargs "-Dusethreads" --perlargs "-Duse64bitint" --mirrors http://cpan.hexten.net/ \
             --plugin App::SmokeBrew::Plugin::CPANPLUS::YACSmoke --recent --verbose
 
@@ -37,7 +37,7 @@ It accepts a number of command line switches or options options specified in a c
 
 Specify a configuration file to use. See L</CONFIGURATION FILE> for more details.
 
-=item C<--build_dir DIRPATH>
+=item C<--builddir DIRPATH>
 
 This is a required argument. This is the directory path that smokebrew will use for building and
 configuration. If the path doesn't exist it will be created.
@@ -96,9 +96,9 @@ This switch may be specified multiple times with different arguments.
 This an optional switch. Specify if smokebrew should produce verbose output about what it is doing.
 By default it is silent.
 
-=item C<--clean_up>
+=item C<--noclean>
 
-This is an optional switch. Specify whether smokebrew should clean up in the C<build_dir> as it 
+This is an optional switch. Specify whether smokebrew should clean up in the C<builddir> as it 
 processes. The default is to be tidy.
 
 =item C<--skiptest>
@@ -177,12 +177,12 @@ This is a feature of L<MooseX::Getopt>.
 
 =over
 
-=item C<build_dir=DIRPATH>
+=item C<builddir=DIRPATH>
 
 This is a required argument. This is the directory path that smokebrew will use for building and
 configuration. If the path doesn't exist it will be created.
 
-  build_dir=/home/cpan/pit/build
+  builddir=/home/cpan/pit/build
 
 =item C<prefix=DIRPATH>
 
@@ -241,12 +241,12 @@ By default it is silent.
 
   verbose=1
 
-=item C<clean_up=BOOL>
+=item C<noclean=BOOL>
 
-This is an optional switch. Specify whether smokebrew should clean up in the C<build_dir> as it 
+This is an optional switch. Specify whether smokebrew should clean up in the C<builddir> as it 
 processes. The default is to be tidy.
 
-  clean_up=0
+  noclean=1
 
 =item C<skiptest=BOOL>
 

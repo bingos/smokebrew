@@ -8,7 +8,7 @@ use_ok('App::SmokeBrew::BuildPerl');
   eval {
     my $bp = App::SmokeBrew::BuildPerl->new(
       version => '6.10.1',
-      build_dir => '.',
+      builddir => '.',
       prefix => 'perl-5.10.1',
       perlargs => ['-Dusethreads','-Duse64bitint'],
     );
@@ -19,7 +19,7 @@ use_ok('App::SmokeBrew::BuildPerl');
 {
   my $bp = App::SmokeBrew::BuildPerl->new(
     version => '5.10.1',
-    build_dir => '.',
+    builddir => '.',
     prefix => 'perl-5.10.1',
     perlargs => ['-Dusethreads','-Duse64bitint'],
   );
@@ -33,7 +33,7 @@ use_ok('App::SmokeBrew::BuildPerl');
   eval {
     my $bp = App::SmokeBrew::BuildPerl->new(
       version => '5.005_03',
-      build_dir => '.',
+      builddir => '.',
       prefix => 'perl5.005_03',
       perlargs => ['-Dusethreads','-Duse64bitint'],
     );

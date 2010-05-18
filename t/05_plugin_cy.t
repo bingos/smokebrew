@@ -6,7 +6,7 @@ use_ok('App::SmokeBrew::Plugin::CPANPLUS::YACSmoke');
 {
   my $plugin = App::SmokeBrew::Plugin::CPANPLUS::YACSmoke->new(
       version   => '5.10.1',
-      build_dir => '.',
+      builddir => '.',
       prefix    => 'perl-5.10.1',
       email     => 'cpanplus@example.com',
       perl_exe  => $^X,

@@ -36,11 +36,11 @@ has 'mirrors' => (
 
 sub _build__cpanplus {
   my $self = shift;
-  $self->build_dir->mkpath;
+  $self->builddir->mkpath;
   my $default = 'B/BI/BINGOS/CPANPLUS-0.9003.tar.gz';
   my $path;
   my $ff = File::Fetch->new( uri => 'http://cpanidx.org/cpanidx/yaml/mod/CPANPLUS' );
-  my $stat = $ff->fetch( to => $self->build_dir->absolute );
+  my $stat = $ff->fetch( to => $self->builddir->absolute );
   require Parse::CPAN::Meta;
   my ($doc) = eval { Parse::CPAN::Meta::LoadFile( $stat ) };
   return $default unless $doc;
@@ -52,10 +52,10 @@ sub _build__cpanplus {
 
 sub configure {
   my $self = shift;
-  $self->build_dir->mkpath;
+  $self->builddir->mkpath;
   msg("Fetching '" . $self->_cpanplus . "'", $self->verbose);
   my $loc = 'authors/id/' . $self->_cpanplus;
-  my $fetch = App::SmokeBrew::Tools->fetch( $loc, $self->build_dir->absolute );
+  my $fetch = App::SmokeBrew::Tools->fetch( $loc, $self->builddir->absolute );
   if ( $fetch ) {
     msg("Fetched to '$fetch'", $self->verbose );
   }
@@ -65,7 +65,7 @@ sub configure {
   }
   return unless $fetch;
   msg("Extracting '$fetch'", $self->verbose);
-  my $extract = App::SmokeBrew::Tools->extract( $fetch, $self->build_dir->absolute );
+  my $extract = App::SmokeBrew::Tools->extract( $fetch, $self->builddir->absolute );
   if ( $extract ) {
     msg("Extracted to '$extract'", $self->verbose );
   }
@@ -74,7 +74,7 @@ sub configure {
     return;
   }
   return unless $extract;
-  unlink( $fetch ) if $self->clean_up();
+  unlink( $fetch ) if $self->noclean();
   my $perl = can_run( $self->perl_exe->absolute );
   unless ( $perl ) {
     error("Could not execute '" . $self->perl_exe->absolute . "'", $self->verbose );
@@ -90,13 +90,13 @@ sub configure {
     my $cmd = [ $perl, 'bin/boxer' ];
     return unless scalar run( command => $cmd, verbose => 1 );
   }
-  rmtree( $extract ) if $self->clean_up();
+  rmtree( $extract ) if $self->noclean();
   my $conf = File::Spec->catdir( $self->prefix->absolute, 'conf', $self->perl_version );
   mkpath( $conf );
   {
     local $ENV{APPDATA} = $conf;
     my $cpconf = $self->_cpconf();
-    local $CWD = $self->build_dir->absolute;
+    local $CWD = $self->builddir->absolute;
     use IO::Handle;
     open my $boxed, '>', 'cpconf.pl' or die "$!\n";
     $boxed->autoflush(1);
@@ -105,7 +105,7 @@ sub configure {
     my $cmd = [ $perl, 'cpconf.pl', '--email', $self->email ];
     push @$cmd, ( '--mx', $self->mx ) if $self->mx;
     return unless scalar run( command => $cmd, verbose => 1 );
-    unlink( 'cpconf.pl' ) if $self->clean_up();
+    unlink( 'cpconf.pl' ) if $self->noclean();
   }
   return 1;
 }

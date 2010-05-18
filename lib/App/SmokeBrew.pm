@@ -52,7 +52,7 @@ use MooseX::Types::Email qw[EmailAddress];
 
 # Mandatory
 
-has 'build_dir' => (
+has 'builddir' => (
   is => 'ro',
   isa => Dir,
   required => 1,
@@ -107,10 +107,10 @@ has 'mx' => (
   isa => 'Str',
 );
 
-has 'clean_up' => (
+has 'noclean' => (
   is => 'ro',
   isa => 'Bool',
-  default => 1,
+  default => 0,
 );
 
 has 'verbose' => (
@@ -174,7 +174,7 @@ sub run {
       version   => $perl,
       map { ( $_ => $self->$_ ) } 
         grep { defined $self->$_ } 
-          qw(build_dir prefix verbose clean_up skiptest perlargs mirrors make),
+          qw(builddir prefix verbose noclean skiptest perlargs mirrors make),
     );
     unless ( $build ) {
       error( "Could not create a build object for ($perl)", $self->verbose );
@@ -198,7 +198,7 @@ sub run {
       perl_exe  => $perl_exe,
       map { ( $_ => $self->$_ ) } 
         grep { defined $self->$_ } 
-          qw(build_dir prefix verbose clean_up mirrors email mx),
+          qw(builddir prefix verbose noclean mirrors email mx),
     );
     unless ( $plugin ) {
       error( "Could not make plugin (" . $self->plugin . ")", $self->verbose );

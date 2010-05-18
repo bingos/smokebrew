@@ -4,10 +4,9 @@ use App::SmokeBrew::Plugin::CPANPLUS::YACSmoke;
 
 my $plugin = App::SmokeBrew::Plugin::CPANPLUS::YACSmoke->new(
   version   => '5.8.9',
-  build_dir => 'build',
+  builddir => 'build',
   prefix    => 'prefix',
   verbose   => 1,
-  clean_up  => 1,
   perl_exe  => 'prefix/perl-5.8.9/bin/perl',
   email     => 'bingos@cpan.org',
   mx        => '192.168.1.87',
