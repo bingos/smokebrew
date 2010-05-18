@@ -11,6 +11,8 @@ use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir File];
 use MooseX::Types::Email qw[EmailAddress];
 
+requires 'configure';
+
 has 'build_dir' => (
   is => 'ro',
   isa => Dir,
@@ -120,6 +122,18 @@ Optional boolean attribute, which defaults to 0, indicates whether the plugin sh
 
 Optional boolean attribute, which defaults to 1, indicates whether the plugin should cleanup files that it 
 produces under the C<build_dir> or not.
+
+=back
+
+=head1 METHODS
+
+Consumer classes as required to implement the following methods:
+
+=over
+
+=item C<configure>
+
+Called by L<smokebrew> to configure the given perl for CPAN Testing.
 
 =back
 

@@ -236,6 +236,10 @@ Create a new App::SmokeBrew object
 
 This method is called by L<smokebrew> to do all the work.
 
+=head2 C<get_config_from_file>
+
+This method is required by L<MooseX::ConfigFromFile> to load the C<configfile>.
+
 =head1 AUTHOR
 
 Chris C<BinGOs> Williams

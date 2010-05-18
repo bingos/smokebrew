@@ -298,6 +298,16 @@ configures the built perl installations for CPAN Testing with L<CPANPLUS::YACSmo
 It will set up the L<CPANPLUS> / L<CPANPLUS::YACSmoke> base locations to be in the C<conf> directory
 under the given C<prefix> directory with a directory for each perl version.
 
+=head1 METHODS
+
+=over
+
+=item C<configure>
+
+Called by L<smokebrew> to perform the CPAN Testing configuration.
+
+=back
+
 =head1 AUTHOR
 
 Chris C<BinGOs> Williams
