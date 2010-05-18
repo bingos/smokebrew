@@ -50,6 +50,8 @@ use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir File];
 use MooseX::Types::Email qw[EmailAddress];
 
+# Mandatory
+
 has 'build_dir' => (
   is => 'ro',
   isa => Dir,
@@ -69,6 +71,36 @@ has 'email' => (
   isa => EmailAddress,
   required => 1,
 );
+
+has 'plugin' => (
+  is => 'ro',
+  isa => subtype( 
+          as 'Str', 
+          where { 
+                  my $plugin = $_; 
+                  return grep { $plugin eq $_ } __PACKAGE__->plugins; 
+          },
+          message { "($_) is not a valid plugin" } 
+  ),
+  required => 1,
+);
+
+# Multiple
+
+has 'mirrors' => (
+  is => 'ro',
+  isa => 'ArrayRefUri',
+  default => sub { \@mirrors },
+  coerce => 1,
+);
+
+has 'perlargs' => (
+  is => 'ro',
+  isa => 'ArrayRefStr',
+  coerce => 1,
+);
+
+# Optional
 
 has 'mx' => (
   is => 'ro',
@@ -98,18 +130,7 @@ has 'make' => (
   isa => 'Str',
 );
 
-has 'mirrors' => (
-  is => 'ro',
-  isa => 'ArrayRefUri',
-  default => sub { \@mirrors },
-  coerce => 1,
-);
-
-has 'perlargs' => (
-  is => 'ro',
-  isa => 'ArrayRefStr',
-  coerce => 1,
-);
+# What perl versions to install
 
 has 'stable' => (
   is => 'ro',
@@ -126,18 +147,7 @@ has 'recent' => (
   isa => 'Bool',
 );
 
-has 'plugin' => (
-  is => 'ro',
-  isa => subtype( 
-          as 'Str', 
-          where { 
-                  my $plugin = $_; 
-                  return grep { $plugin eq $_ } __PACKAGE__->plugins; 
-          },
-          message { "($_) is not a valid plugin" } 
-  ),
-  required => 1,
-);
+# Internal
 
 has '_perls' => (
   is => 'ro',
