@@ -6,6 +6,7 @@ use App::SmokeBrew::Tools;
 use File::chdir;
 use File::Fetch;
 use File::Spec;
+use File::Path qw[rmtree mkpath];
 use IPC::Cmd qw[run can_run];
 use Log::Message::Simple qw[msg error];
 use vars qw[$VERSION];
@@ -91,6 +92,7 @@ sub configure {
   }
   rmtree( $extract ) if $self->clean_up();
   my $conf = File::Spec->catdir( $self->prefix->absolute, 'conf', $self->perl_version );
+  mkpath( $conf );
   {
     local $ENV{APPDATA} = $conf;
     my $cpconf = $self->_cpconf();
@@ -109,6 +111,7 @@ sub configure {
 }
 
 sub _boxed {
+my $self = shift;
 return q+
 BEGIN {
     use strict;
@@ -193,6 +196,8 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
         $ConfObj->set_conf( base    => $BASE );     # new base dir
         $ConfObj->set_conf( verbose => 1     );     # be verbose
         $ConfObj->set_conf( prereqs => 1     );     # install prereqs
+        $ConfObj->set_conf( enable_custom_sources => 0 ); # install prereqs
+        $ConfObj->set_conf( hosts => + . $self->_mirrors . q+ );
         $ConfObj->save(     $Config => $PRIV_LIB ); # save the pm in that dir
     }
 }
@@ -250,7 +255,6 @@ $conf->set_conf( write_install_logs => 0 );
 $conf->set_conf( hosts => +;
   $cpconf .= $self->_mirrors() . ');';
   $cpconf .= q+
-$conf->set_conf( hosts => $hosts );
 $conf->save();
 exit 0;
 +;
@@ -277,3 +281,41 @@ __PACKAGE__->meta->make_immutable;
 qq[Smokin'];
 
 __END__
+
+=head1 NAME
+
+App::SmokeBrew::Plugin::CPANPLUS::YACSmoke - A smokebrew plugin for CPANPLUS::YACSmoke based smokers
+
+=head1 SYNOPSIS
+
+  smokebrew --plugin App::SmokeBrew::Plugin::CPANPLUS::YACSmoke
+
+=head1 DESCRIPTION
+
+App::SmokeBrew::Plugin::CPANPLUS::YACSmoke is a L<App::SmokeBrew::Plugin> for L<smokebrew> which 
+configures the built perl installations for CPAN Testing with L<CPANPLUS::YACSmoke>.
+
+It will set up the L<CPANPLUS> / L<CPANPLUS::YACSmoke> base locations to be in the C<conf> directory
+under the given C<prefix> directory with a directory for each perl version.
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 SEE ALSO
+
+L<App::SmokeBrew::Plugin>
+
+L<smokebrew>
+
+L<CPANPLUS>
+
+L<CPANPLUS::YACSmoke>
+
+=cut

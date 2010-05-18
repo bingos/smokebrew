@@ -7,6 +7,7 @@ use Log::Message::Simple qw[msg error];
 use Perl::Version;
 use File::Spec;
 use File::chdir;
+use Devel::PatchPerl;
 use Cwd         qw[chdir cwd];
 use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
@@ -62,7 +63,7 @@ has 'clean_up' => (
 
 has 'make' => (
   is => 'ro',
-  isa => subtype( 'Str' => where { can_run( $_ ) }, message { "Could not execute ($_)" } ),
+  isa => 'Str',
   default => sub { can_run('make') },
 );
 
@@ -78,6 +79,8 @@ sub build_perl {
   unlink( $file ) if $self->clean_up();
   $self->prefix->mkpath();
   my $prefix = File::Spec->catdir( $self->prefix->absolute, $perl_version );
+  msg('Applying any applicable patches to the source', $self->verbose );
+  Devel::PatchPerl->patch_source( $self->version->stringify, $extract );
   {
     local $CWD = $extract;
     mkpath( File::Spec->catdir( $prefix, 'bin' ) );

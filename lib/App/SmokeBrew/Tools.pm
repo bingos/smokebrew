@@ -82,6 +82,9 @@ sub perls {
       elsif ( $type and $type eq 'dev' ) {
           _is_dev($_) and !_is_ancient($_);
       }
+      elsif ( $type and $type eq 'recent' ) {
+          _is_recent($_);
+      }
       else {
           _is_dev($_) or _is_rel($_) and !_is_ancient($_);
       }
@@ -102,6 +105,14 @@ sub _is_rel {
   return !( $pv->version % 2 );
 }
 
+sub _is_recent {
+  my $pv = shift;
+  return 0 if _is_ancient($pv);
+  return 0 if _is_dev($pv);
+  return 1 if $pv->numify >= 5.008009;
+  return 0;
+}
+
 sub _is_ancient {
   my $pv = shift;
   ( my $numify = $pv->numify ) =~ s/_//g;
@@ -117,6 +128,13 @@ sub _format_version {
   my $normal = $pv->normal();
   $normal =~ s/^v//g;
   return $normal;
+}
+
+sub devel_perl {
+  my $perl = shift;
+  $perl = shift if $perl->isa(__PACKAGE__);
+  return unless $perl;
+  return _is_dev( Perl::Version->new( $perl ) );
 }
 
 qq[Smoke tools look what's inside of you];
@@ -148,6 +166,14 @@ App::SmokeBrew::Tools - Various utility functions for smokebrew
   my @stables = App::SmokeBrew::Tools->perls( 'rel' );
 
   my @devs = App::SmokeBrew::Tools->perls( 'dev' );
+
+  my @recents = App::SmokeBrew::Tools->perls( 'recent' );
+
+  my $perl = '5.13.0';
+
+  if ( App::SmokeBrew::Tools->devel_perl( $perl ) ) {
+     print "perl ($perl) is a development perl\n";
+  }
 
 =head1 DESCRIPTION
 
@@ -186,6 +212,14 @@ Returns a list of perl versions. Without a parameter returns all perl releases >
 Specifying C<rel> as the parameter will return all C<stable> perl releases >= 5.006
 
 Specifying C<dev> as the parameter will return only the C<development> perl releases >= 5.006
+
+Specifying C<recent> as the parameter will return only the C<stable> perl releases >= 5.008009
+
+=item C<devel_perl>
+
+Takes one parameter a perl version to check.
+
+Returns true if given perl is a development perl.
 
 =back
 

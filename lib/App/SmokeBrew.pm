@@ -3,13 +3,16 @@ package App::SmokeBrew;
 use strict;
 use warnings;
 use Pod::Usage;
+use Log::Message::Simple qw[msg error];
+use Module::Load::Conditional qw[can_load];
 use App::SmokeBrew::IniFile;
 use App::SmokeBrew::Tools;
-use Module::Pluggable search_path => 'App::SmokeBrew::Plugin'; # except => 'POE::Compone
+use App::SmokeBrew::BuildPerl;
+use Module::Pluggable search_path => 'App::SmokeBrew::Plugin';
 use File::Spec;
 use Cwd;
 use Getopt::Long;
-use vars        qw[$VERSION];
+use vars qw[$VERSION];
 
 $VERSION = '0.01_01';
 
@@ -43,6 +46,7 @@ has 'configfile' => (
   },
 );
 
+use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir File];
 use MooseX::Types::Email qw[EmailAddress];
 
@@ -83,11 +87,21 @@ has 'verbose' => (
   default => 0,
 );
 
+has 'skiptest' => (
+  is => 'ro',
+  isa => 'Bool',
+  default => 0,
+);
+
+has 'make' => ( 
+  is => 'ro',
+  isa => 'Str',
+);
+
 has 'mirrors' => (
   is => 'ro',
   isa => 'ArrayRefUri',
   default => sub { \@mirrors },
-  auto_deref => 1,
   coerce => 1,
 );
 
@@ -97,47 +111,133 @@ has 'perlargs' => (
   coerce => 1,
 );
 
-q[Smokebrew, look what's inside of you];
+has 'stable' => (
+  is => 'ro',
+  isa => 'Bool',
+);
+
+has 'devel' => (
+  is => 'ro',
+  isa => 'Bool',
+);
+
+has 'recent' => (
+  is => 'ro',
+  isa => 'Bool',
+);
+
+has 'plugin' => (
+  is => 'ro',
+  isa => subtype( 
+          as 'Str', 
+          where { 
+                  my $plugin = $_; 
+                  return grep { $plugin eq $_ } __PACKAGE__->plugins; 
+          },
+          message { "($_) is not a valid plugin" } 
+  ),
+  required => 1,
+);
+
+has '_perls' => (
+  is => 'ro',
+  isa => 'ArrayRef[Str]',
+  init_arg => undef,
+  lazy_build => 1,
+  auto_deref => 1,
+);
+
+sub _build__perls {
+  my $self = shift;
+  my $arg;
+  $arg = 'rel' if $self->stable;
+  $arg = 'dev' if $self->devel;
+  $arg = 'recent' if $self->recent;
+  return [ grep { $_ ne '5.6.0' and $_  ne '5.8.0' } App::SmokeBrew::Tools->perls( $arg ) ];
+}
 
 sub run {
   my $self = shift;
-  print $_, "\n" for $self->plugins;
+  PERL: foreach my $perl ( $self->_perls ) {
+    msg( "Building perl ($perl)", $self->verbose );
+    my $build = App::SmokeBrew::BuildPerl->new(
+      version   => $perl,
+      map { ( $_ => $self->$_ ) } 
+        grep { defined $self->$_ } 
+          qw(build_dir prefix verbose clean_up skiptest perlargs mirrors make),
+    );
+    unless ( $build ) {
+      error( "Could not create a build object for ($perl)", $self->verbose );
+      next PERL;
+    }
+    my $location = $build->build_perl();
+    unless ( $location ) {
+      error( "Could not build perl ($perl)", $self->verbose );
+      next PERL;
+    }
+    my $perl_exe = 
+      File::Spec->catfile( $location, 'bin', ( App::SmokeBrew::Tools->devel_perl( $perl ) ? "perl$perl" : 'perl' ) );
+    msg( "Successfully built ($perl_exe)", $self->verbose );
+    msg( "Configuring (" . $self->plugin .")", $self->verbose );
+    unless ( can_load( modules => { $self->plugin, '0.0' } ) ) {
+      error( "Could not load plugin (" . $self->plugin . ")", $self->verbose );
+      next PERL;
+    }
+    my $plugin = $self->plugin->new(
+      version   => $perl,
+      perl_exe  => $perl_exe,
+      map { ( $_ => $self->$_ ) } 
+        grep { defined $self->$_ } 
+          qw(build_dir prefix verbose clean_up mirrors email mx),
+    );
+    unless ( $plugin ) {
+      error( "Could not make plugin (" . $self->plugin . ")", $self->verbose );
+      next PERL;
+    }
+    unless ( $plugin->configure ) {
+      error( "Could not configure plugin (" . $self->plugin . ")", $self->verbose );
+      next PERL;
+    }
+    msg( "Finished build and configuration for perl ($perl)", $self->verbose );
+  }
 }
+
+q[Smokebrew, look what's inside of you];
 
 __END__
 
-=for comment
+=head1 NAME
 
-  - init directories
+App::SmokeBrew - The guts of smokebrew
 
-  - generate list of perls
-    - > stable perls
-    - > development perls
-    - > both
+=head1 SYNOPSIS
 
-  - foreach perl
-    - > build skeleton dirs perl-$ver/bin conf/perl-$ver/.cpanplus
-    - > symlink {authors,cpansmoke.ini}
-    - > fetch tarball from CPAN Mirror to sources
-    - > extract to build dir
-    - > run ./Configure
-      - > No options for 'bare'
-      - > -Dusethreads for 'thr'
-      - > -Duse64bitint for '64bit'
-      - > both the above for 'rel'
-    - > make
-    - > make test (?)
-    - > make install
+  use strict;
+  use warnings;
+  use App::SmokeBrew;
 
-    - > plugins for smoker configuration. CPANPLUS/CPANPLUS::YACSmoke
-      - > configure CPANPLUS for smoking
-        - > obtain CPANPLUS
-        - > use a hacked version of boxed with the unwrapped CPANPLUS dist
-        - > s selfupdate dependencies
-        - > i .
-        - > i Module::Build CPANPLUS::Dist::Build
-        - > Update required modules
-        - > i CPANPLUS::YACSmoke
-        - > Configure CPANPLUS (cpconf.pl)
+  App::SmokeBrew->new_with_options()->run();
+
+=head2 C<new_with_options>
+
+Create a new App::SmokeBrew object
+
+=head2 C<run>
+
+This method is called by L<smokebrew> to do all the work.
+
+=head1 AUTHOR
+
+Chris C<BinGOs> Williams
+
+=head1 LICENSE
+
+Copyright E<copy> Chris Williams
+
+This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+
+=head1 SEE ALSO
+
+L<smokebrew>
 
 =cut

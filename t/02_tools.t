@@ -34,6 +34,18 @@ use App::SmokeBrew::Tools;
     is( scalar @pvs, scalar @rels, 'Do the two perl arrays have the same number of elements');
     is( ( scalar grep { !( $_->version % 2 ) } @pvs ), scalar @rels, 'They are all dev releases' );
   }
+  my @recents = App::SmokeBrew::Tools->perls('recent');
+  ok( scalar @recents, 'We got something back' );
+  {
+    my @pvs = map { Perl::Version->new($_) } @recents;
+    is( scalar @pvs, scalar @recents, 'Do the two perl arrays have the same number of elements');
+    is( ( scalar grep { $_->numify >= 5.008009 } @pvs ), scalar @recents, 'They are all recent releases' );
+  }
+}
+
+{
+  ok( App::SmokeBrew::Tools->devel_perl('5.13.0'), 'It is a development perl' );
+  ok( !App::SmokeBrew::Tools->devel_perl('5.12.0'), 'It is not a development perl' );
 }
 
 {
