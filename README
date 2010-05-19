@@ -95,6 +95,13 @@ COMMAND LINE SWITCHES
         the "make test" phase of building a perl. The default is to run
         "make test".
 
+    "--force"
+        This is an optional switch. By default if a perl installation
+        already exists for a given perl version smokebrew will skip over the
+        build and configuration for that perl. Enabling this option will
+        make smokebrew zap the existing installation and build and configure
+        again.
+
     "--make MAKE"
         This is an optional argument. Specify the "make" executable that
         should be used. The default is "make".

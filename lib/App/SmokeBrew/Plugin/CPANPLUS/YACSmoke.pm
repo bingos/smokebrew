@@ -3,6 +3,7 @@ package App::SmokeBrew::Plugin::CPANPLUS::YACSmoke;
 use strict;
 use warnings;
 use App::SmokeBrew::Tools;
+use Cwd qw[realpath];
 use File::chdir;
 use File::Fetch;
 use File::Spec;
@@ -64,7 +65,7 @@ sub configure {
     return;
   }
   return unless $extract;
-  unlink( $fetch ) if $self->noclean();
+  unlink( $fetch ) unless $self->noclean();
   my $perl = can_run( $self->perl_exe->absolute );
   unless ( $perl ) {
     error("Could not execute '" . $self->perl_exe->absolute . "'", $self->verbose );
@@ -80,7 +81,7 @@ sub configure {
     my $cmd = [ $perl, 'bin/boxer' ];
     return unless scalar run( command => $cmd, verbose => 1 );
   }
-  rmtree( $extract ) if $self->noclean();
+  rmtree( $extract ) unless $self->noclean();
   my $conf = File::Spec->catdir( $self->prefix->absolute, 'conf', $self->perl_version );
   mkpath( $conf );
   {
@@ -95,7 +96,22 @@ sub configure {
     my $cmd = [ $perl, 'cpconf.pl', '--email', $self->email ];
     push @$cmd, ( '--mx', $self->mx ) if $self->mx;
     return unless scalar run( command => $cmd, verbose => 1 );
-    unlink( 'cpconf.pl' ) if $self->noclean();
+    unlink( 'cpconf.pl' ) unless $self->noclean();
+    # Setup symlinks
+    if ( eval { symlink("",""); 1 } ) {
+      my $parent = realpath( File::Spec->catdir( $self->prefix->absolute, '..' ) );
+      my $authors = File::Spec->catdir( $parent, 'authors' );
+      my $smokeini = File::Spec->catfile( $parent, 'cpansmoke.ini' );
+      unless ( -e $smokeini ) {
+        open my $ini, '>', $smokeini or die "$!\n";
+        $ini->autoflush(1);
+        print $ini $self->_cpansmokeini;
+        close $ini;
+      }
+      mkpath( $authors ) unless -d $authors;
+      symlink( $authors, File::Spec->catdir( $conf, '.cpanplus', 'authors' ) );
+      symlink( $smokeini, File::Spec->catdir( $conf, '.cpanplus', 'cpansmoke.ini' ) );
+    }
   }
   return 1;
 }
@@ -249,6 +265,20 @@ $conf->save();
 exit 0;
 +;
 return $cpconf;
+}
+
+sub _cpansmokeini {
+  return q+
+[CONFIG]
+exclude_dists=<<HERE
+mod_perl
+^OpenResty
+^Prima-
+^Router-Generic-
+^Net-TDMA-
+^PLUTO-
+HERE
++;
 }
 
 sub _mirrors {

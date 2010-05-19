@@ -76,7 +76,7 @@ sub build_perl {
   return unless $file;
   my $extract = $self->_extract( $file );
   return unless $extract;
-  unlink( $file ) if $self->noclean();
+  unlink( $file ) unless $self->noclean();
   $self->prefix->mkpath();
   my $prefix = File::Spec->catdir( $self->prefix->absolute, $perl_version );
   msg("Removing existing installation at ($prefix)", $self->verbose );
@@ -98,7 +98,7 @@ sub build_perl {
     }
     return unless scalar run( command => [ $self->make, 'install' ], verbose => $self->verbose );
   }
-  rmtree( $extract ) if $self->noclean();
+  rmtree( $extract ) unless $self->noclean();
   return $prefix;
 }
 
