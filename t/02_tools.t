@@ -49,6 +49,11 @@ use App::SmokeBrew::Tools;
 }
 
 {
+  is( App::SmokeBrew::Tools->perl_version('5.6.0'), 'perl-5.6.0', 'Formatted correctly' );
+  is( App::SmokeBrew::Tools->perl_version('5.003_07'), 'perl5.003_07', 'Formatted correctly' );
+}
+
+{
   my $cwd = File::Spec->rel2abs('.');
   local $ENV{PERL5_SMOKEBREW_DIR} = $cwd;
   my $smdir = App::SmokeBrew::Tools->smokebrew_dir();

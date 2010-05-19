@@ -78,12 +78,19 @@ has 'plugin' => (
           as 'Str', 
           where { 
                   my $plugin = $_; 
-                  return grep { $plugin eq $_ } __PACKAGE__->plugins; 
+                  return grep { $plugin eq $_ or /\Q$plugin\E$/ } __PACKAGE__->plugins; 
           },
           message { "($_) is not a valid plugin" } 
   ),
   required => 1,
 );
+
+sub _get_plugin {
+  my $self = shift;
+  my $plugin = $self->plugin;
+  my ($match) = grep { $plugin eq $_ or /\Q$plugin\E$/ } __PACKAGE__->plugins;
+  return $match;
+}
 
 # Multiple
 
@@ -120,6 +127,12 @@ has 'verbose' => (
 );
 
 has 'skiptest' => (
+  is => 'ro',
+  isa => 'Bool',
+  default => 0,
+);
+
+has 'force' => (
   is => 'ro',
   isa => 'Bool',
   default => 0,
@@ -170,30 +183,37 @@ sub run {
   my $self = shift;
   PERL: foreach my $perl ( $self->_perls ) {
     msg( "Building perl ($perl)", $self->verbose );
-    my $build = App::SmokeBrew::BuildPerl->new(
-      version   => $perl,
-      map { ( $_ => $self->$_ ) } 
-        grep { defined $self->$_ } 
-          qw(builddir prefix verbose noclean skiptest perlargs mirrors make),
-    );
-    unless ( $build ) {
-      error( "Could not create a build object for ($perl)", $self->verbose );
-      next PERL;
-    }
-    my $location = $build->build_perl();
-    unless ( $location ) {
-      error( "Could not build perl ($perl)", $self->verbose );
-      next PERL;
-    }
-    my $perl_exe = 
+    my $perl_exe;
+    unless ( -e $self->_perl_exe( $perl ) and !$self->force ) {
+      my $build = App::SmokeBrew::BuildPerl->new(
+        version   => $perl,
+        map { ( $_ => $self->$_ ) } 
+          grep { defined $self->$_ } 
+            qw(builddir prefix verbose noclean skiptest perlargs mirrors make),
+      );
+      unless ( $build ) {
+        error( "Could not create a build object for ($perl)", $self->verbose );
+        next PERL;
+      }
+      my $location = $build->build_perl();
+      unless ( $location ) {
+        error( "Could not build perl ($perl)", $self->verbose );
+        next PERL;
+      }
+      $perl_exe = 
       File::Spec->catfile( $location, 'bin', ( App::SmokeBrew::Tools->devel_perl( $perl ) ? "perl$perl" : 'perl' ) );
-    msg( "Successfully built ($perl_exe)", $self->verbose );
+      msg( "Successfully built ($perl_exe)", $self->verbose );
+    }
+    else {
+      msg("The perl exe already exists skipping build and configuration", $self->verbose);
+      next PERL;
+    }
     msg( "Configuring (" . $self->plugin .")", $self->verbose );
     unless ( can_load( modules => { $self->plugin, '0.0' } ) ) {
       error( "Could not load plugin (" . $self->plugin . ")", $self->verbose );
       next PERL;
     }
-    my $plugin = $self->plugin->new(
+    my $plugin = $self->_get_plugin->new(
       version   => $perl,
       perl_exe  => $perl_exe,
       map { ( $_ => $self->$_ ) } 
@@ -210,6 +230,17 @@ sub run {
     }
     msg( "Finished build and configuration for perl ($perl)", $self->verbose );
   }
+}
+
+sub _perl_exe {
+  my $self = shift;
+  my $perl = shift || return;
+  return 
+    File::Spec->catfile( 
+      $self->prefix->absolute, 
+      App::SmokeBrew::Tools->perl_version($perl), 
+      'bin', 
+      ( App::SmokeBrew::Tools->devel_perl( $perl ) ? "perl$perl" : 'perl' ) )
 }
 
 q[Smokebrew, look what's inside of you];

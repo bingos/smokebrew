@@ -130,9 +130,19 @@ sub _format_version {
   return $normal;
 }
 
+sub perl_version {
+  my $vers = shift;
+  $vers = shift if eval { $vers->isa(__PACKAGE__) };
+  my $version = Perl::Version->new( $vers );
+  ( my $numify = $version->numify ) =~ s/_//g;
+  my $pv = 'perl'.( $numify < 5.006 ? $version->numify : $version->normal );
+  $pv =~ s/perlv/perl-/g;
+  return $pv;
+}
+
 sub devel_perl {
   my $perl = shift;
-  $perl = shift if $perl->isa(__PACKAGE__);
+  $perl = shift if eval { $perl->isa(__PACKAGE__) };
   return unless $perl;
   return _is_dev( Perl::Version->new( $perl ) );
 }
@@ -220,6 +230,12 @@ Specifying C<recent> as the parameter will return only the C<stable> perl releas
 Takes one parameter a perl version to check.
 
 Returns true if given perl is a development perl.
+
+=item C<perl_version>
+
+Takes one parameter a perl version.
+
+Returns the version with the C<perl-> prefix.
 
 =back
 

@@ -79,6 +79,8 @@ sub build_perl {
   unlink( $file ) if $self->noclean();
   $self->prefix->mkpath();
   my $prefix = File::Spec->catdir( $self->prefix->absolute, $perl_version );
+  msg("Removing existing installation at ($prefix)", $self->verbose );
+  rmtree( $prefix );
   msg('Applying any applicable patches to the source', $self->verbose );
   Devel::PatchPerl->patch_source( $self->version->stringify, $extract );
   {

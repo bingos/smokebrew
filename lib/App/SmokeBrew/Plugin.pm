@@ -10,6 +10,7 @@ use Moose::Role;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir File];
 use MooseX::Types::Email qw[EmailAddress];
+use App::SmokeBrew::Types qw[ArrayRefUri];
 
 requires 'configure';
 
@@ -30,6 +31,14 @@ has 'prefix' => (
 has 'perl_exe' => (
   is => 'ro',
   isa => File,
+  required => 1,
+  coerce => 1,
+);
+
+has 'mirrors' => (
+  is => 'ro',
+  isa => 'ArrayRefUri',
+  auto_deref => 1,
   required => 1,
   coerce => 1,
 );
@@ -108,6 +117,12 @@ example:
 
 A required attribute, this is the path to the perl executable that the plugin will configure, it will be
 coerced to a L<Path::Class::File> object by L<MooseX::Types::Path::Class>.
+
+=item C<mirrors>
+
+A required attribute, this is an arrayref of L<URI> objects representing CPAN Mirrors to use. It uses
+type C<ArrayRefUri> from L<App::SmokeBrew::Types>, so will coerce L<URI> objects from ordinary strings and
+from an arrayref of strings. It is set to C<auto_deref>.
 
 =item C<mx>
 

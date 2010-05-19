@@ -17,21 +17,11 @@ use Moose;
 
 with 'App::SmokeBrew::PerlVersion', 'App::SmokeBrew::Plugin';
 
-use App::SmokeBrew::Types qw[ArrayRefUri];
-
 has '_cpanplus' => (
   is => 'ro',
   isa => 'Str',
   init_arg   => undef,
   lazy_build => 1,
-);
-
-has 'mirrors' => (
-  is => 'ro',
-  isa => 'ArrayRefUri',
-  auto_deref => 1,
-  required => 1,
-  coerce => 1,
 );
 
 sub _build__cpanplus {

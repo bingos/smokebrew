@@ -19,7 +19,7 @@ email=foo\@bar.com
 builddir=$build
 prefix=$prefix
 mx=mx.foo.com
-plugin=App::SmokeBrew::Plugin::CPANPLUS::YACSmoke
+plugin=CPANPLUS::YACSmoke
 perlargs=-Dusemallocwrap=y
 perlargs=-Dusemymalloc=n
 HERE
@@ -31,7 +31,8 @@ is( $app->email, 'foo@bar.com', 'Email option is okay' );
 is( $app->mx, 'mx.foo.com', 'MX option is okay' );
 is( $app->builddir, $build, 'Build dir option is okay' );
 is( $app->prefix, $prefix, 'Prefix dir option is okay' );
-is( $app->plugin, 'App::SmokeBrew::Plugin::CPANPLUS::YACSmoke', 'Plugin option is okay' );
+is( $app->plugin, 'CPANPLUS::YACSmoke', 'Plugin option is okay' );
+is( $app->_get_plugin, 'App::SmokeBrew::Plugin::CPANPLUS::YACSmoke', 'Plugin option is okay' );
 is( ref $app->perlargs, 'ARRAY', 'Perlargs is an ARRAYref');
 diag("$_\n") for @{ $app->perlargs };
 }
