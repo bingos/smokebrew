@@ -72,6 +72,9 @@ This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the 
 
 This is a required argument. Specify the L<App::SmokeBrew::Plugin> to use. Plugins are verified as installed
 by using L<Module::Pluggable>. This is what will be used to configure each perl for CPAN Testing.
+You may either specify the full plugin module name eg. L<App::SmokeBrew::Plugin::CPANPLUS::YACSmoke> or, for
+convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix, 
+eg. L<CPANPLUS::YACSmoke>.
 
 =item C<--perlargs FLAG>
 
@@ -217,8 +220,15 @@ This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the 
 
 This is a required argument. Specify the L<App::SmokeBrew::Plugin> to use. Plugins are verified as installed
 by using L<Module::Pluggable>. This is what will be used to configure each perl for CPAN Testing.
+You may either specify the full plugin module name eg. L<App::SmokeBrew::Plugin::CPANPLUS::YACSmoke> or, for
+convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix, 
+eg. L<CPANPLUS::YACSmoke>.
 
   plugin=App::SmokeBrew::Plugin::CPANPLUS::YACSmoke
+
+or
+
+  plugin=CPANPLUS::YACSmoke
 
 =item C<perlargs=FLAG>
 
