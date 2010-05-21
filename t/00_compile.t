@@ -8,4 +8,5 @@ use_ok('App::SmokeBrew::Types');
 use_ok('App::SmokeBrew::PerlVersion');
 use_ok('App::SmokeBrew::BuildPerl');
 use_ok('App::SmokeBrew::Plugin');
+use_ok('App::SmokeBrew::Plugin::Null');
 use_ok('App::SmokeBrew::Plugin::CPANPLUS::YACSmoke');
