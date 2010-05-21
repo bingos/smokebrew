@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw[$VERSION];
 
-$VERSION = '0.01_01';
+$VERSION = '0.02';
 
 use Moose::Role;
 use Perl::Version;
