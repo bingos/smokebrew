@@ -1,5 +1,8 @@
 use strict;
 use inc::Module::Install;
+use Module::Install::GithubMeta;
+use Module::Install::ReadmeFromPod;
+use Module::Install::AutoLicense;
 name 'smokebrew';
 author 'Chris Williams <chris@bingosnet.co.uk>';
 version_from 'lib/App/SmokeBrew.pm';
