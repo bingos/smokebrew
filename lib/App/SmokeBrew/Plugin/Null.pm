@@ -1,4 +1,4 @@
-package App::SmokeBrew::Plugin::CPANPLUS::YACSmoke;
+package App::SmokeBrew::Plugin::Null;
 
 use strict;
 use warnings;
@@ -28,7 +28,7 @@ App::SmokeBrew::Plugin::Null - A smokebrew plugin for does nothing.
 
 =head1 SYNOPSIS
 
-  smokebrew --plugin App::SmokeBrew::Plugin::CPANPLUS::YACSmoke
+  smokebrew --plugin App::SmokeBrew::Plugin::Null
 
 =head1 DESCRIPTION
 

@@ -60,6 +60,10 @@ COMMAND LINE SWITCHES
         This is a required argument. Specify the App::SmokeBrew::Plugin to
         use. Plugins are verified as installed by using Module::Pluggable.
         This is what will be used to configure each perl for CPAN Testing.
+        You may either specify the full plugin module name eg.
+        App::SmokeBrew::Plugin::CPANPLUS::YACSmoke or, for convenience,
+        specify the last part of the plugin without the
+        App::SmokeBrew::Plugin prefix, eg. CPANPLUS::YACSmoke.
 
     "--perlargs FLAG"
         This is an optional argument. Specify a Configure command line
@@ -204,8 +208,16 @@ CONFIGURATION FILE
         This is a required argument. Specify the App::SmokeBrew::Plugin to
         use. Plugins are verified as installed by using Module::Pluggable.
         This is what will be used to configure each perl for CPAN Testing.
+        You may either specify the full plugin module name eg.
+        App::SmokeBrew::Plugin::CPANPLUS::YACSmoke or, for convenience,
+        specify the last part of the plugin without the
+        App::SmokeBrew::Plugin prefix, eg. CPANPLUS::YACSmoke.
 
           plugin=App::SmokeBrew::Plugin::CPANPLUS::YACSmoke
+
+        or
+
+          plugin=CPANPLUS::YACSmoke
 
     "perlargs=FLAG"
         This is an optional argument. Specify a Configure command line
