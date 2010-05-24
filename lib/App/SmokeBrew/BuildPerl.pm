@@ -6,11 +6,11 @@ use App::SmokeBrew::Tools;
 use Log::Message::Simple qw[msg error];
 use Perl::Version;
 use File::Spec;
-use File::chdir;
 use Devel::PatchPerl;
 use Cwd         qw[chdir cwd];
 use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
+use File::pushd qw[pushd];
 use vars        qw[$VERSION];
 
 $VERSION = '0.02';
@@ -84,7 +84,7 @@ sub build_perl {
   msg('Applying any applicable patches to the source', $self->verbose );
   Devel::PatchPerl->patch_source( $self->version->stringify, $extract );
   {
-    local $CWD = $extract;
+    my $CWD = pushd( $extract );
     mkpath( File::Spec->catdir( $prefix, 'bin' ) );
     my @conf_opts = $self->perlargs;
     push @conf_opts, '-Dusedevel' if $self->is_dev_release();

@@ -4,7 +4,6 @@ use Test::More qw[no_plan];
 use File::Temp qw[tempdir];
 use File::Path qw[rmtree];
 use Perl::Version;
-use File::chdir;
 use App::SmokeBrew::Tools;
 
 {

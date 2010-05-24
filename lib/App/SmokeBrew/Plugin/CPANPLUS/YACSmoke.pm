@@ -3,13 +3,13 @@ package App::SmokeBrew::Plugin::CPANPLUS::YACSmoke;
 use strict;
 use warnings;
 use App::SmokeBrew::Tools;
-use Cwd qw[realpath];
-use File::chdir;
 use File::Fetch;
 use File::Spec;
-use File::Path qw[rmtree mkpath];
-use IPC::Cmd qw[run can_run];
-use Log::Message::Simple qw[msg error];
+use Cwd                   qw[realpath];
+use File::Path            qw[rmtree mkpath];
+use File::pushd           qw[pushd];
+use IPC::Cmd              qw[run can_run];
+use Log::Message::Simple  qw[msg error];
 use vars qw[$VERSION];
 
 $VERSION = '0.02';
@@ -72,7 +72,7 @@ sub configure {
     return;
   }
   {
-    local $CWD = $extract;
+    my $CWD = pushd( $extract );
     use IO::Handle;
     open my $boxed, '>', 'bin/boxer' or die "$!\n";
     $boxed->autoflush(1);
@@ -87,7 +87,7 @@ sub configure {
   {
     local $ENV{APPDATA} = $conf;
     my $cpconf = $self->_cpconf();
-    local $CWD = $self->builddir->absolute;
+    my $CWD = pushd( $self->builddir->absolute );
     use IO::Handle;
     open my $boxed, '>', 'cpconf.pl' or die "$!\n";
     $boxed->autoflush(1);
