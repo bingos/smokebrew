@@ -14,7 +14,7 @@ use Cwd;
 use Getopt::Long;
 use vars qw[$VERSION];
 
-$VERSION = '0.04';
+$VERSION = '0.06';
 
 my @mirrors = (
   'http://cpan.hexten.net/',
@@ -83,14 +83,13 @@ has 'plugin' => (
           message { "($_) is not a valid plugin" } 
   ),
   required => 1,
+  writer => '_set_plugin',
+  trigger => sub {
+    my ($self,$plugin,$old) = @_;
+    return if $old;
+    $self->_set_plugin( grep { $plugin eq $_ or /\Q$plugin\E$/ } __PACKAGE__->plugins );
+  },
 );
-
-sub _get_plugin {
-  my $self = shift;
-  my $plugin = $self->plugin;
-  my ($match) = grep { $plugin eq $_ or /\Q$plugin\E$/ } __PACKAGE__->plugins;
-  return $match;
-}
 
 # Multiple
 
@@ -213,7 +212,7 @@ sub run {
       error( "Could not load plugin (" . $self->plugin . ")", $self->verbose );
       next PERL;
     }
-    my $plugin = $self->_get_plugin->new(
+    my $plugin = $self->plugin->new(
       version   => $perl,
       perl_exe  => $perl_exe,
       map { ( $_ => $self->$_ ) } 
