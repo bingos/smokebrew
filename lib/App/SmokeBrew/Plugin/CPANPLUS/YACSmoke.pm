@@ -214,6 +214,8 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     my $cb = CPANPLUS::Backend->new( $ConfObj );
     my $su = $cb->selfupdate_object;
 
+    $cb->module_tree( 'Module::Build' )->install(); # Move this here because perl-5.10.0 is icky
+
     $su->selfupdate( update => 'dependencies', latest => 1 );
     $cb->module_tree( $_ )->install() for 
       qw(
@@ -227,7 +229,6 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
           ExtUtils::Manifest
           ExtUtils::MakeMaker
           Log::Message::Simple
-          Module::Build
           CPANPLUS::YACSmoke
       );
     $_->install() for map { $su->modules_for_feature( $_ ) } qw(prefer_makefile md5 storable cpantest);
