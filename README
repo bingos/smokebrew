@@ -155,6 +155,17 @@ COMMAND LINE SWITCHES
           5.9.5
           5.13.0
 
+    "--install"
+        Specify a particular version of perl that you wish to install. This
+        can be of the form "perl-version" or "version". This overrides the
+        "--recent", "--stable" and "--devel" switches.
+
+        Example:
+
+          --install perl-5.10.1
+
+          --install 5.10.1
+
 CONFIGURATION FILE
     All the command line switches may also be specifed in a configuration
     file ( except "configfile" for obvious reasons ).

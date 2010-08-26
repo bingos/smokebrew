@@ -165,6 +165,17 @@ Examples:
   5.9.5
   5.13.0
 
+=item C<--install>
+
+Specify a particular version of perl that you wish to install. This can be of the form C<perl-version> or C<version>.
+This overrides the C<--recent>, C<--stable> and C<--devel> switches.
+
+Example:
+
+  --install perl-5.10.1
+
+  --install 5.10.1
+
 =back
 
 =head1 CONFIGURATION FILE

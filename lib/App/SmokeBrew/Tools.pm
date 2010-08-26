@@ -11,7 +11,7 @@ use Perl::Version;
 use URI;
 use vars qw[$VERSION];
 
-$VERSION = '0.06';
+$VERSION = '0.08';
 
 my @mirrors = (
   'http://cpan.hexten.net/',
@@ -72,6 +72,9 @@ sub smokebrew_dir {
 sub perls {
   my $type = shift;
   $type = shift if $type->isa(__PACKAGE__);
+  unless ( $type and $type =~ /^(rel|dev|recent)$/i ) {
+    $type =~ s/[^\d\.]+//g if $type;
+  }
   return
   uniq 
   map { _format_version($_) } 
@@ -84,6 +87,9 @@ sub perls {
       }
       elsif ( $type and $type eq 'recent' ) {
           _is_recent($_);
+      }
+      elsif ( $type ) {
+          $_->normal =~ /\Q$type\E$/;    
       }
       else {
           _is_dev($_) or _is_rel($_) and !_is_ancient($_);

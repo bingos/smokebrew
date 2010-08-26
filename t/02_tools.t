@@ -40,6 +40,13 @@ use App::SmokeBrew::Tools;
     is( scalar @pvs, scalar @recents, 'Do the two perl arrays have the same number of elements');
     is( ( scalar grep { $_->numify >= 5.008009 } @pvs ), scalar @recents, 'They are all recent releases' );
   }
+  my @install = App::SmokeBrew::Tools->perls('perl-5.10.1');
+  ok( scalar @install, 'We got something back' );
+  {
+    my @pvs = map { Perl::Version->new($_) } @install;
+    is( scalar @pvs, scalar @install, 'Do the two perl arrays have the same number of elements');
+    is( ( scalar grep { $_->numify == 5.010001 } @pvs ), scalar @install, 'It is the right Perl Version' );
+  }
 }
 
 {

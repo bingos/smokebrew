@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw[$VERSION];
 
-$VERSION = '0.06';
+$VERSION = '0.08';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
