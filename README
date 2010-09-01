@@ -106,6 +106,12 @@ COMMAND LINE SWITCHES
         make smokebrew zap the existing installation and build and configure
         again.
 
+    "--forcecfg"
+        This is an optional switch. By default if a perl installation
+        already exists for a given perl version smokebrew will skip over the
+        build and configuration for that perl. Enabling this option will
+        make smokebrew skip the build process, but enable reconfiguration.
+
     "--make MAKE"
         This is an optional argument. Specify the "make" executable that
         should be used. The default is "make".

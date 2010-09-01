@@ -14,7 +14,7 @@ use Cwd;
 use Getopt::Long;
 use vars qw[$VERSION];
 
-$VERSION = '0.10';
+$VERSION = '0.12';
 
 my @mirrors = (
   'http://cpan.hexten.net/',
@@ -218,6 +218,7 @@ sub run {
     else {
       msg("The perl exe already exists skipping build", $self->verbose);
       next PERL unless $self->forcecfg;
+      $perl_exe = $self->_perl_exe( $perl );
     }
     msg( "Configuring (" . $self->plugin .")", $self->verbose );
     unless ( can_load( modules => { $self->plugin, '0.0' } ) ) {
