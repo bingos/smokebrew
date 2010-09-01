@@ -12,7 +12,7 @@ use IPC::Cmd              qw[run can_run];
 use Log::Message::Simple  qw[msg error];
 use vars qw[$VERSION];
 
-$VERSION = '0.12';
+$VERSION = '0.14';
 
 use Moose;
 
@@ -79,6 +79,7 @@ sub configure {
     print $boxed $self->_boxed;
     close $boxed;
     my $cmd = [ $perl, 'bin/boxer' ];
+    local $ENV{PERL_MM_USE_DEFAULT} = 1;
     return unless scalar run( command => $cmd, verbose => 1 );
   }
   rmtree( $extract ) unless $self->noclean();
