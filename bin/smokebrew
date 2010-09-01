@@ -115,6 +115,12 @@ This is an optional switch. By default if a perl installation already exists for
 smokebrew will skip over the build and configuration for that perl. Enabling this option will make
 smokebrew zap the existing installation and build and configure again.
 
+=item C<--forcecfg>
+
+This is an optional switch. By default if a perl installation already exists for a given perl version
+smokebrew will skip over the build and configuration for that perl. Enabling this option will make
+smokebrew skip the build process, but enable reconfiguration.
+
 =item C<--make MAKE>
 
 This is an optional argument. Specify the C<make> executable that should be used. The default is C<make>.
