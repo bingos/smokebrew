@@ -13,14 +13,21 @@ use File::Path  qw[mkpath rmtree];
 use File::pushd qw[pushd];
 use vars        qw[$VERSION];
 
-$VERSION = '0.14';
+$VERSION = '0.16';
 
 use Moose;
 use Moose::Util::TypeConstraints;
 use MooseX::Types::Path::Class qw[Dir];
-use App::SmokeBrew::Types qw[ArrayRefStr];
+use App::SmokeBrew::Types qw[ArrayRefStr ArrayRefUri];
 
 with 'App::SmokeBrew::PerlVersion';
+
+my @mirrors = (
+  'http://cpan.hexten.net/',
+  'http://cpan.cpantesters.org/',
+  'ftp://ftp.funet.fi/pub/CPAN/',
+  'http://www.cpan.org/',
+);
 
 has 'builddir' => (
   is => 'ro',
@@ -67,6 +74,13 @@ has 'make' => (
   default => sub { can_run('make') },
 );
 
+has 'mirrors' => (
+  is => 'ro',
+  isa => 'ArrayRefUri',
+  default => sub { \@mirrors },
+  coerce => 1,
+);
+
 sub build_perl {
   my $self = shift;
   my $perl_version = $self->perl_version;
@@ -106,7 +120,7 @@ sub _fetch {
   my $self = shift;
   my $perldist = 'src/5.0/' . $self->perl_version . '.tar.gz';
   msg("Fetching '" . $perldist . "'", $self->verbose);
-  my $stat = App::SmokeBrew::Tools->fetch( $perldist, $self->builddir->absolute );
+  my $stat = App::SmokeBrew::Tools->fetch( $perldist, $self->builddir->absolute, $self->mirrors );
   return $stat if $stat;
   error("Failed to fetch '". $perldist . "'", $self->verbose);
   return $stat;
