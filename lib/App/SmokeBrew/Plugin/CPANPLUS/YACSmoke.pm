@@ -12,7 +12,7 @@ use IPC::Cmd              qw[run can_run];
 use Log::Message::Simple  qw[msg error];
 use vars qw[$VERSION];
 
-$VERSION = '0.16';
+$VERSION = '0.18';
 
 use Moose;
 
@@ -203,6 +203,7 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
         $ConfObj->set_conf( base    => $BASE );     # new base dir
         $ConfObj->set_conf( verbose => 1     );     # be verbose
         $ConfObj->set_conf( prereqs => 1     );     # install prereqs
+        $ConfObj->set_conf( prefer_makefile => 1 ); # prefer Makefile.PL because of v5.10.0
         $ConfObj->set_conf( enable_custom_sources => 0 ); # install prereqs
         $ConfObj->set_conf( hosts => + . $self->_mirrors . q+ );
         $ConfObj->save(     $Config => $PRIV_LIB ); # save the pm in that dir
