@@ -13,7 +13,7 @@ use File::Path  qw[mkpath rmtree];
 use File::pushd qw[pushd];
 use vars        qw[$VERSION];
 
-$VERSION = '0.18';
+$VERSION = '0.20';
 
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -111,6 +111,7 @@ sub build_perl {
       return unless scalar run( command => [ $self->make, 'test' ], verbose => $self->verbose );
     }
     return unless scalar run( command => [ $self->make, 'install' ], verbose => $self->verbose );
+    rmtree ( File::Spec->catdir( $prefix, 'man' ) ); # remove the manpages
   }
   rmtree( $extract ) unless $self->noclean();
   return $prefix;

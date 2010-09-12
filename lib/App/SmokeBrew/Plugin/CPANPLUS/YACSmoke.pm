@@ -12,7 +12,7 @@ use IPC::Cmd              qw[run can_run];
 use Log::Message::Simple  qw[msg error];
 use vars qw[$VERSION];
 
-$VERSION = '0.18';
+$VERSION = '0.20';
 
 use Moose;
 
