@@ -5,7 +5,7 @@ use warnings;
 use base 'Config::INI::Reader';
 use vars qw[$VERSION];
 
-$VERSION = '0.20';
+$VERSION = '0.22';
 
 sub set_value {
   my ($self, $name, $value) = @_;
