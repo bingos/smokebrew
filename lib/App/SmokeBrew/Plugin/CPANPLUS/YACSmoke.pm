@@ -206,6 +206,7 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
         $ConfObj->set_conf( prefer_makefile => 1 ); # prefer Makefile.PL because of v5.10.0
         $ConfObj->set_conf( enable_custom_sources => 0 ); # install prereqs
         $ConfObj->set_conf( hosts => + . $self->_mirrors . q+ );
+        $ConfObj->set_program( sudo => undef );
         $ConfObj->save(     $Config => $PRIV_LIB ); # save the pm in that dir
     }
 }
@@ -264,6 +265,7 @@ $conf->set_conf( write_install_logs => 0 );
 $conf->set_conf( hosts => +;
   $cpconf .= $self->_mirrors() . ');';
   $cpconf .= q+
+$conf->set_program( sudo => undef );
 $conf->save();
 exit 0;
 +;
