@@ -8,11 +8,27 @@ use App::SmokeBrew::Tools;
 
 {
   my $tmpdir = tempdir( DIR => '.', CLEANUP => 1 );
-  my $foo = App::SmokeBrew::Tools->fetch('authors/01mailrc.txt.gz', $tmpdir);
-  ok( $foo, 'Foo is okay' );
-  ok( -e $foo, 'The file exists' );
-  my $extract = App::SmokeBrew::Tools->extract( $foo, $tmpdir );
-  ok( $extract, 'Extract is okay' );
+
+  my $fetchtests = 1;
+
+  {
+    # Check we can fetch a file from a CPAN mirror
+    require IO::Socket::INET;
+    my $sock = IO::Socket::INET->new( PeerAddr => 'cpan.hexten.net', PeerPort => 80, Timeout => 20 )
+       or $fetchtests = 0;
+  }
+
+  SKIP: {
+    skip "Can't talk to a CPAN mirror skipping fetch and extraction tests", 3 unless $fetchtests;
+
+    my $foo = App::SmokeBrew::Tools->fetch('authors/01mailrc.txt.gz', $tmpdir);
+    ok( $foo, 'Foo is okay' );
+    ok( -e $foo, 'The file exists' );
+    my $extract = App::SmokeBrew::Tools->extract( $foo, $tmpdir );
+    ok( $extract, 'Extract is okay' );
+
+  }
+
   my @perls = App::SmokeBrew::Tools->perls();
   ok( scalar @perls, 'We got something back' );
   {
