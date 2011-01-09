@@ -11,7 +11,7 @@ use Perl::Version;
 use URI;
 use vars qw[$VERSION];
 
-$VERSION = '0.24';
+$VERSION = '0.26';
 
 my @mirrors = (
   'http://cpan.hexten.net/',
