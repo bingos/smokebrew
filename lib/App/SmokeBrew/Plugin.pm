@@ -152,6 +152,12 @@ Called by L<smokebrew> to configure the given perl for CPAN Testing.
 
 =back
 
+=head1 PLUGIN OPTIONS
+
+L<App::SmokeBrew> will pass any options it finds in a named section of the configuration file for a 
+plugin when it a new plugin instance. See L<smokebrew> for details. You are expected to document any options
+that may be passed to your plugin in this manner.
+
 =head1 AUTHOR
 
 Chris C<BinGOs> Williams

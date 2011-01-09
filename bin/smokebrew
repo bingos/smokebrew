@@ -206,6 +206,8 @@ directory.
 Command line switches will override anything specified in the configuration file, including multi-value parameters.
 This is a feature of L<MooseX::Getopt>.
 
+=head2 GLOBAL OPTIONS
+
 =over
 
 =item C<builddir=DIRPATH>
@@ -353,6 +355,19 @@ Examples:
   5.13.0
 
 =back
+
+=head2 PLUGIN CONFIGURATION
+
+Options to be passed to plugins may be specified under named sections in the configuration file.
+
+You may either specify the full plugin module name as the section name 
+eg. L<App::SmokeBrew::Plugin::CPANPLUS::YACSmoke> or, for
+convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix, 
+eg. L<CPANPLUS::YACSmoke>.
+
+  [Random::Plugin]
+
+  someopt = foobar
 
 =head1 AUTHOR
 

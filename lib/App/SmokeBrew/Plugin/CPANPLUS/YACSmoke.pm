@@ -217,6 +217,8 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     my $cb = CPANPLUS::Backend->new( $ConfObj );
     my $su = $cb->selfupdate_object;
 
+    $cb->parse_module( module => 'http://backpan.perl.org/authors/id/J/JP/JPEACOCK/version-0.82.tar.gz' )->install();
+
     $cb->module_tree( 'Module::Build' )->install(); # Move this here because perl-5.10.0 is icky
 
     $su->selfupdate( update => 'dependencies', latest => 1 );

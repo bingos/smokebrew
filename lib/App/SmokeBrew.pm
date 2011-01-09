@@ -32,7 +32,10 @@ use App::SmokeBrew::Types qw[ArrayRefUri ArrayRefStr];
 sub get_config_from_file {
   my ($class,$file) = @_;
   my $options_hashref = App::SmokeBrew::IniFile->read_file($file);
-  return $options_hashref->{_};
+  my $opts = delete $options_hashref->{_};
+  $opts->{_plugins}->{$_} = delete $options_hashref->{$_}
+    for keys %{ $options_hashref };
+  return $opts;
 }
 
 has 'configfile' => (
@@ -186,6 +189,12 @@ has '_perls' => (
   auto_deref => 1,
 );
 
+has '_plugins' => (
+  is => 'ro',
+  isa => 'HashRef',
+  default => sub { { } },
+);
+
 sub _build__perls {
   my $self = shift;
   my $arg;
@@ -231,9 +240,17 @@ sub run {
       error( "Could not load plugin (" . $self->plugin . ")", $self->verbose );
       next PERL;
     }
+    my $plugopts;
+    {
+      my $plugin = $self->plugin;
+      ($plugopts) = grep { $plugin eq $_ or /\Q$plugin\E$/ } keys %{ $self->_plugins };
+    }
     my $plugin = $self->plugin->new(
       version   => $perl,
       perl_exe  => $perl_exe,
+      map { ( $_ => $self->_plugins->{ $plugopts }->{$_} ) }
+        grep { defined $self->_plugins->{ $plugopts }->{$_} }
+          keys %{ $self->_plugins->{ $plugopts } },
       map { ( $_ => $self->$_ ) } 
         grep { defined $self->$_ } 
           qw(builddir prefix verbose noclean mirrors email mx),
