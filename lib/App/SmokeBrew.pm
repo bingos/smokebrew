@@ -240,20 +240,23 @@ sub run {
       error( "Could not load plugin (" . $self->plugin . ")", $self->verbose );
       next PERL;
     }
-    my $plugopts;
+    my @plugopts;
     {
+      my $plugopts;
       my $plugin = $self->plugin;
-      ($plugopts) = grep { $plugin eq $_ or /\Q$plugin\E$/ } keys %{ $self->_plugins };
+      ($plugopts) = grep { $plugin eq $_ or $plugin =~ /\Q$_\E$/ } keys %{ $self->_plugins };
+      @plugopts = map { ( $_ => $self->_plugins->{ $plugopts }->{$_} ) }
+        grep { defined $self->_plugins->{ $plugopts }->{$_} }
+          keys %{ $self->_plugins->{ $plugopts } } if $plugopts;
     }
     my $plugin = $self->plugin->new(
       version   => $perl,
       perl_exe  => $perl_exe,
-      map { ( $_ => $self->_plugins->{ $plugopts }->{$_} ) }
-        grep { defined $self->_plugins->{ $plugopts }->{$_} }
-          keys %{ $self->_plugins->{ $plugopts } },
-      map { ( $_ => $self->$_ ) } 
+      ( map { ( $_ => $self->$_ ) }
         grep { defined $self->$_ } 
-          qw(builddir prefix verbose noclean mirrors email mx),
+          qw(builddir prefix verbose noclean mirrors email mx)
+      ),
+      @plugopts,
     );
     unless ( $plugin ) {
       error( "Could not make plugin (" . $self->plugin . ")", $self->verbose );
