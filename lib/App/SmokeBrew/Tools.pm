@@ -95,7 +95,8 @@ sub perls {
           _is_dev($_) or _is_rel($_) and !_is_ancient($_);
       }
   }
-  map { Perl::Version->new($_) } 
+  map { Perl::Version->new($_) }
+  map { $_ >= 5.006 ? sprintf('%.6f', $_) : $_ }
   sort keys %Module::CoreList::released;
 }
 
