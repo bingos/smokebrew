@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use App::SmokeBrew::Tools;
 use Log::Message::Simple qw[msg error];
+use CPAN::Perl::Releases qw[perl_tarballs];
 use Perl::Version;
 use File::Spec;
 use Devel::PatchPerl;
@@ -126,7 +127,12 @@ sub build_perl {
 
 sub _fetch {
   my $self = shift;
-  my $perldist = 'src/5.0/' . $self->perl_version . '.tar.gz';
+  my $perldist;
+  {
+    ( my $version = $self->perl_version ) =~ s/perl-//g;
+    my $tarballs = perl_tarballs( $version );
+    $perldist = 'authors/id/' . $tarballs->{'tar.gz'};
+  }
   msg("Fetching '" . $perldist . "'", $self->verbose);
   my $stat = App::SmokeBrew::Tools->fetch( $perldist, $self->builddir->absolute, $self->mirrors );
   return $stat if $stat;
