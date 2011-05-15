@@ -14,7 +14,7 @@ use Cwd;
 use Getopt::Long;
 use vars qw[$VERSION];
 
-$VERSION = '0.30';
+$VERSION = '0.32';
 
 my @mirrors = (
   'http://cpan.hexten.net/',

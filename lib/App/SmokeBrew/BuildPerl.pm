@@ -14,7 +14,7 @@ use File::Path  qw[mkpath rmtree];
 use File::pushd qw[pushd];
 use vars        qw[$VERSION];
 
-$VERSION = '0.30';
+$VERSION = '0.32';
 
 use Moose;
 use Moose::Util::TypeConstraints;
