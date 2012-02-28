@@ -5,12 +5,12 @@ use warnings;
 use base 'Config::INI::Reader';
 use vars qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 sub set_value {
   my ($self, $name, $value) = @_;
 
-  if ( defined $self->{data}{ $self->current_section }{$name} 
+  if ( defined $self->{data}{ $self->current_section }{$name}
        and ref $self->{data}{ $self->current_section }{$name} eq 'ARRAY' ) {
     push @{ $self->{data}{ $self->current_section }{$name} }, $value;
   }

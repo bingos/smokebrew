@@ -14,13 +14,13 @@ use Cwd;
 use Getopt::Long;
 use vars qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 my @mirrors = (
-  'http://cpan.hexten.net/',
-  'http://cpan.cpantesters.org/',
-  'ftp://ftp.funet.fi/pub/CPAN/',
   'http://www.cpan.org/',
+  'http://cpan.cpantesters.org/',
+  'http://cpan.hexten.net/',
+  'ftp://ftp.funet.fi/pub/CPAN/',
 );
 
 use Moose;
@@ -40,9 +40,9 @@ sub get_config_from_file {
 
 has 'configfile' => (
   is => 'ro',
-  default => sub { 
-      my $file = File::Spec->catfile( 
-          App::SmokeBrew::Tools->smokebrew_dir(), 
+  default => sub {
+      my $file = File::Spec->catfile(
+          App::SmokeBrew::Tools->smokebrew_dir(),
           '.smokebrew', 'smokebrew.cfg' );
       return unless -e $file;
       return $file;
@@ -77,13 +77,13 @@ has 'email' => (
 
 has 'plugin' => (
   is => 'ro',
-  isa => subtype( 
-          as 'Str', 
-          where { 
-                  my $plugin = $_; 
-                  return grep { $plugin eq $_ or /\Q$plugin\E$/ } __PACKAGE__->plugins; 
+  isa => subtype(
+          as 'Str',
+          where {
+                  my $plugin = $_;
+                  return grep { $plugin eq $_ or /\Q$plugin\E$/ } __PACKAGE__->plugins;
           },
-          message { "($_) is not a valid plugin" } 
+          message { "($_) is not a valid plugin" }
   ),
   required => 1,
   writer => '_set_plugin',
@@ -152,7 +152,7 @@ has 'force' => (
   default => 0,
 );
 
-has 'make' => ( 
+has 'make' => (
   is => 'ro',
   isa => 'Str',
 );
@@ -213,8 +213,8 @@ sub run {
     unless ( -e $self->_perl_exe( $perl ) and !$self->force ) {
       my $build = App::SmokeBrew::BuildPerl->new(
         version   => $perl,
-        map { ( $_ => $self->$_ ) } 
-          grep { defined $self->$_ } 
+        map { ( $_ => $self->$_ ) }
+          grep { defined $self->$_ }
             qw(builddir prefix verbose noclean nozapman skiptest perlargs mirrors make),
       );
       unless ( $build ) {
@@ -226,7 +226,7 @@ sub run {
         error( "Could not build perl ($perl)", $self->verbose );
         next PERL;
       }
-      $perl_exe = 
+      $perl_exe =
       File::Spec->catfile( $location, 'bin', ( App::SmokeBrew::Tools->devel_perl( $perl ) ? "perl$perl" : 'perl' ) );
       msg( "Successfully built ($perl_exe)", $self->verbose );
     }
@@ -253,7 +253,7 @@ sub run {
       version   => $perl,
       perl_exe  => $perl_exe,
       ( map { ( $_ => $self->$_ ) }
-        grep { defined $self->$_ } 
+        grep { defined $self->$_ }
           qw(builddir prefix verbose noclean mirrors email mx)
       ),
       @plugopts,
@@ -273,11 +273,11 @@ sub run {
 sub _perl_exe {
   my $self = shift;
   my $perl = shift || return;
-  return 
-    File::Spec->catfile( 
-      $self->prefix->absolute, 
-      App::SmokeBrew::Tools->perl_version($perl), 
-      'bin', 
+  return
+    File::Spec->catfile(
+      $self->prefix->absolute,
+      App::SmokeBrew::Tools->perl_version($perl),
+      'bin',
       ( App::SmokeBrew::Tools->devel_perl( $perl ) ? "perl$perl" : 'perl' ) )
 }
 

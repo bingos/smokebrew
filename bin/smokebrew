@@ -23,7 +23,7 @@ smokebrew - Automated Perl building and installation for CPAN Testers
 
 smokebrew is a utility that builds, installs and configures perls for CPAN testing.
 
-It downloads, extracts, patches ( if applicable ), configures, builds, tests and installs 
+It downloads, extracts, patches ( if applicable ), configures, builds, tests and installs
 perl versions and runs an specified L<App::SmokeBrew::Plugin> to configure the perl installation
 for CPAN testing.
 
@@ -66,14 +66,14 @@ Testing.
 
 This is an optional argument. Can be a FQDN, hostname or IP address and is a mail exchanger that should be
 used instead of sending CPAN Test reports directly to C<perl.org> MX.
-This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the each perl for CPAN Testing 
+This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the each perl for CPAN Testing
 
 =item C<--plugin PLUGIN>
 
 This is a required argument. Specify the L<App::SmokeBrew::Plugin> to use. Plugins are verified as installed
 by using L<Module::Pluggable>. This is what will be used to configure each perl for CPAN Testing.
 You may either specify the full plugin module name eg. L<App::SmokeBrew::Plugin::CPANPLUS::YACSmoke> or, for
-convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix, 
+convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix,
 eg. L<CPANPLUS::YACSmoke>.
 
 =item C<--perlargs FLAG>
@@ -101,7 +101,7 @@ By default it is silent.
 
 =item C<--noclean>
 
-This is an optional switch. Specify whether smokebrew should clean up in the C<builddir> as it 
+This is an optional switch. Specify whether smokebrew should clean up in the C<builddir> as it
 processes. The default is to be tidy.
 
 =item C<--nozapman>
@@ -167,7 +167,7 @@ Examples:
 
 =item C<--devel>
 
-This will indicate that you wish to only install C<development> perls, which are perl development releases and have 
+This will indicate that you wish to only install C<development> perls, which are perl development releases and have
 an odd version number.
 
 Examples:
@@ -191,7 +191,7 @@ Example:
 
 =head1 CONFIGURATION FILE
 
-All the command line switches may also be specifed in a configuration file ( except C<configfile> for 
+All the command line switches may also be specifed in a configuration file ( except C<configfile> for
 obvious reasons ).
 
 The configuration file is C<INI> style format. L<App::SmokeBrew::IniFile> a subclass of L<Config::INI::Reader>
@@ -236,7 +236,7 @@ Testing.
 
 This is an optional argument. Can be a FQDN, hostname or IP address and is a mail exchanger that should be
 used instead of sending CPAN Test reports directly to C<perl.org> MX.
-This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the each perl for CPAN Testing 
+This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the each perl for CPAN Testing
 
   mx=mx.foo.com
 
@@ -245,7 +245,7 @@ This will be passed to the given L<App::SmokeBrew::Plugin> when configuring the 
 This is a required argument. Specify the L<App::SmokeBrew::Plugin> to use. Plugins are verified as installed
 by using L<Module::Pluggable>. This is what will be used to configure each perl for CPAN Testing.
 You may either specify the full plugin module name eg. L<App::SmokeBrew::Plugin::CPANPLUS::YACSmoke> or, for
-convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix, 
+convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix,
 eg. L<CPANPLUS::YACSmoke>.
 
   plugin=App::SmokeBrew::Plugin::CPANPLUS::YACSmoke
@@ -283,7 +283,7 @@ By default it is silent.
 
 =item C<noclean=BOOL>
 
-This is an optional switch. Specify whether smokebrew should clean up in the C<builddir> as it 
+This is an optional switch. Specify whether smokebrew should clean up in the C<builddir> as it
 processes. The default is to be tidy.
 
   noclean=1
@@ -345,7 +345,7 @@ Examples:
 
 =item C<devel=BOOL>
 
-This will indicate that you wish to only install C<development> perls, which are perl development releases and have 
+This will indicate that you wish to only install C<development> perls, which are perl development releases and have
 an odd version number.
 
 Examples:
@@ -360,9 +360,9 @@ Examples:
 
 Options to be passed to plugins may be specified under named sections in the configuration file.
 
-You may either specify the full plugin module name as the section name 
+You may either specify the full plugin module name as the section name
 eg. L<App::SmokeBrew::Plugin::CPANPLUS::YACSmoke> or, for
-convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix, 
+convenience, specify the last part of the plugin without the L<App::SmokeBrew::Plugin> prefix,
 eg. L<CPANPLUS::YACSmoke>.
 
   [Random::Plugin]

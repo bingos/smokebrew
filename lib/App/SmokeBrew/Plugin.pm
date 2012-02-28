@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -135,7 +135,7 @@ Optional boolean attribute, which defaults to 0, indicates whether the plugin sh
 
 =item C<noclean>
 
-Optional boolean attribute, which defaults to 0, indicates whether the plugin should cleanup files that it 
+Optional boolean attribute, which defaults to 0, indicates whether the plugin should cleanup files that it
 produces under the C<builddir> or not.
 
 =back
@@ -154,7 +154,7 @@ Called by L<smokebrew> to configure the given perl for CPAN Testing.
 
 =head1 PLUGIN OPTIONS
 
-L<App::SmokeBrew> will pass any options it finds in a named section of the configuration file for a 
+L<App::SmokeBrew> will pass any options it finds in a named section of the configuration file for a
 plugin when it a new plugin instance. See L<smokebrew> for details. You are expected to document any options
 that may be passed to your plugin in this manner.
 

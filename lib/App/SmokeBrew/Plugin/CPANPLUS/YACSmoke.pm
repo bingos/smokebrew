@@ -12,7 +12,7 @@ use IPC::Cmd              qw[run can_run];
 use Log::Message::Simple  qw[msg error];
 use vars qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 use Moose;
 
@@ -140,13 +140,13 @@ BEGIN {
 
     @RUN_TIME_INC   = ($PRIV_LIB, @INC);
     unshift @INC, $LIB_DIR, $BUNDLE_DIR;
-    
-    $ENV{'PERL5LIB'} = join $Config{'path_sep'}, grep { defined } 
-                        $PRIV_LIB,              # to find the boxed config
-                        #$LIB_DIR,               # the CPANPLUS libs  
-                        $ENV{'PERL5LIB'};       # original PERL5LIB       
 
-}    
+    $ENV{'PERL5LIB'} = join $Config{'path_sep'}, grep { defined }
+                        $PRIV_LIB,              # to find the boxed config
+                        #$LIB_DIR,               # the CPANPLUS libs
+                        $ENV{'PERL5LIB'};       # original PERL5LIB
+
+}
 
 use FindBin;
 use File::Find                          qw[find];
@@ -160,16 +160,16 @@ use CPANPLUS::Internals::Utils;
 
         find( sub { my $file = $File::Find::name;
                 return unless -e $file && -f _ && -s _;
-                
+
                 return if $file =~ /\._/;   # osx temp files
-                
+
                 $file =~ s/^$base_re(\W)?//;
 
                 return if $INC{$file};
-               
-                my $unixfile = File::Spec::Unix->catfile( 
+
+                my $unixfile = File::Spec::Unix->catfile(
                                     File::Spec->splitdir( $file )
-                                );     
+                                );
                 my $pm       = join '::', File::Spec->splitdir( $file );
                 $pm =~ s/\.pm$//i or return;    # not a .pm file
 
@@ -180,8 +180,8 @@ use CPANPLUS::Internals::Utils;
                 if( $@ ) {
                     push @failures, $unixfile;
                 }
-            }, $dir ); 
-    }            
+            }, $dir );
+    }
 
     delete $INC{$_} for @failures;
 
@@ -198,7 +198,7 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     unless( IS_DIR->( $BASE ) ) {
         $Util->_mkdir( dir => $BASE ) or die CPANPLUS::Error->stack_as_string;
     }
- 
+
     unless( -e $ConfigFile ) {
         $ConfObj->set_conf( base    => $BASE );     # new base dir
         $ConfObj->set_conf( verbose => 1     );     # be verbose
@@ -211,7 +211,7 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     }
 }
 
-{   
+{
     $Module::Load::Conditional::CHECK_INC_HASH = 1;
     use CPANPLUS::Backend;
     my $cb = CPANPLUS::Backend->new( $ConfObj );
@@ -222,7 +222,7 @@ my $ConfigFile  = $ConfObj->_config_pm_to_file( $Config => $PRIV_LIB );
     $cb->module_tree( 'Module::Build' )->install(); # Move this here because perl-5.10.0 is icky
 
     $su->selfupdate( update => 'dependencies', latest => 1 );
-    $cb->module_tree( $_ )->install() for 
+    $cb->module_tree( $_ )->install() for
       qw(
           CPANPLUS
           File::Temp
@@ -319,7 +319,7 @@ App::SmokeBrew::Plugin::CPANPLUS::YACSmoke - A smokebrew plugin for CPANPLUS::YA
 
 =head1 DESCRIPTION
 
-App::SmokeBrew::Plugin::CPANPLUS::YACSmoke is a L<App::SmokeBrew::Plugin> for L<smokebrew> which 
+App::SmokeBrew::Plugin::CPANPLUS::YACSmoke is a L<App::SmokeBrew::Plugin> for L<smokebrew> which
 configures the built perl installations for CPAN Testing with L<CPANPLUS::YACSmoke>.
 
 It will set up the L<CPANPLUS> / L<CPANPLUS::YACSmoke> base locations to be in the C<conf> directory

@@ -11,13 +11,13 @@ use Perl::Version;
 use URI;
 use vars qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 my @mirrors = (
-  'http://cpan.hexten.net/',
-  'http://cpan.cpantesters.org/',
-  'ftp://ftp.funet.fi/pub/CPAN/',
   'http://www.cpan.org/',
+  'http://cpan.cpantesters.org/',
+  'http://cpan.hexten.net/',
+  'ftp://ftp.funet.fi/pub/CPAN/',
 );
 
 sub fetch {
@@ -26,7 +26,7 @@ sub fetch {
   return unless $fetch;
   my $loc = shift || return;
   my $mirrors = shift;
-  $mirrors = \@mirrors unless 
+  $mirrors = \@mirrors unless
     $mirrors and ref $mirrors eq 'ARRAY' and scalar @{ $mirrors };
   $loc = File::Spec->rel2abs($loc);
   my $stat;
@@ -76,9 +76,9 @@ sub perls {
     $type =~ s/[^\d\.]+//g if $type;
   }
   return
-  uniq 
-  map { _format_version($_) } 
-  grep { 
+  uniq
+  map { _format_version($_) }
+  grep {
       if ( $type and $type eq 'rel' ) {
           _is_rel($_) and !_is_ancient($_);
       }
@@ -89,7 +89,7 @@ sub perls {
           _is_recent($_);
       }
       elsif ( $type ) {
-          $_->normal =~ /\Q$type\E$/;    
+          $_->normal =~ /\Q$type\E$/;
       }
       else {
           _is_dev($_) or _is_rel($_) and !_is_ancient($_);

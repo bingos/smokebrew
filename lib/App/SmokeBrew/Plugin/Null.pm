@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 use Moose;
 
@@ -32,7 +32,7 @@ App::SmokeBrew::Plugin::Null - A smokebrew plugin for does nothing.
 
 =head1 DESCRIPTION
 
-App::SmokeBrew::Plugin::CPANPLUS::YACSmoke is a L<App::SmokeBrew::Plugin> for L<smokebrew> which 
+App::SmokeBrew::Plugin::CPANPLUS::YACSmoke is a L<App::SmokeBrew::Plugin> for L<smokebrew> which
 does nothing.
 
 This plugin merely returns when C<configure> is called, leaving the given perl installation un-configured.

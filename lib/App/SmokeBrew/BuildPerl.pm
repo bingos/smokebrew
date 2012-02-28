@@ -14,7 +14,7 @@ use File::Path  qw[mkpath rmtree];
 use File::pushd qw[pushd];
 use vars        qw[$VERSION];
 
-$VERSION = '0.34';
+$VERSION = '0.36';
 
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -24,10 +24,10 @@ use App::SmokeBrew::Types qw[ArrayRefStr ArrayRefUri];
 with 'App::SmokeBrew::PerlVersion';
 
 my @mirrors = (
-  'http://cpan.hexten.net/',
-  'http://cpan.cpantesters.org/',
-  'ftp://ftp.funet.fi/pub/CPAN/',
   'http://www.cpan.org/',
+  'http://cpan.cpantesters.org/',
+  'http://cpan.hexten.net/',
+  'ftp://ftp.funet.fi/pub/CPAN/',
 );
 
 has 'builddir' => (
@@ -164,7 +164,7 @@ App::SmokeBrew::BuildPerl - build and install a particular version of Perl
   use strict;
   use warnings;
   use App::SmokeBrew::BuildPerl;
-  
+
   my $bp = App::SmokeBrew::BuildPerl->new(
     version     => '5.12.0',
     builddir   => 'build',
@@ -173,14 +173,14 @@ App::SmokeBrew::BuildPerl - build and install a particular version of Perl
     verbose     => 1,
     perlargs    => [ '-Dusemallocwrap=y', '-Dusemymalloc=n' ],
   );
-  
+
   my $prefix = $bp->build_perl();
-  
+
   print $prefix, "\n";
 
 =head1 DESCRIPTION
 
-App::SmokeBrew::BuildPerl encapsulates the task of configuring, building, testing and installing 
+App::SmokeBrew::BuildPerl encapsulates the task of configuring, building, testing and installing
 a perl executable ( and associated core modules ).
 
 =head1 CONSTRUCTOR
@@ -260,7 +260,7 @@ during the build process. This may be a single URL or an arrayref of a number of
 
 Fetches, extracts, configures, builds, tests (see C<skiptest>) and installs the C<perl> executable.
 
-The C<builddir> is used for the first five processes. Installation is made into the given C<prefix> 
+The C<builddir> is used for the first five processes. Installation is made into the given C<prefix>
 directory.
 
 =back
