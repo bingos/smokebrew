@@ -8,13 +8,14 @@ use CPAN::Perl::Releases qw[perl_tarballs];
 use Perl::Version;
 use File::Spec;
 use Devel::PatchPerl;
+use Config      qw[];
 use Cwd         qw[chdir cwd];
 use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
 use File::pushd qw[pushd];
 use vars        qw[$VERSION];
 
-$VERSION = '0.36';
+$VERSION = '0.38';
 
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -78,7 +79,7 @@ has 'nozapman' => (
 has 'make' => (
   is => 'ro',
   isa => 'Str',
-  default => sub { can_run('make') },
+  default => sub { my $make = $Config::Config{make} || 'make'; can_run( $make ) },
 );
 
 has 'mirrors' => (
