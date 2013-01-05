@@ -73,7 +73,18 @@ sub perls {
   my $type = shift;
   $type = shift if $type->isa(__PACKAGE__);
   if ( $type and $type eq 'latest' ) {
-    return;
+    my %perls;
+    foreach my $pv ( map { Perl::Version->new($_) } perls('recent') ) {
+      my $vers = $pv->version;
+      unless ( exists $perls{$vers} ) {
+        $perls{$vers} = $pv;
+        next;
+      }
+      $perls{$vers} = $pv if $pv > $perls{$vers};
+    }
+    return map { _format_version($_) } map { $perls{$_} }
+      sort { $perls{$a} <=> $perls{$b} } keys %perls;
+    ;
   }
   unless ( $type and $type =~ /^(rel|dev|recent|modern)$/i ) {
     $type =~ s/[^\d\.]+//g if $type;
