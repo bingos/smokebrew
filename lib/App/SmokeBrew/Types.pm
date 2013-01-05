@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use vars qw[$VERSION];
 
-$VERSION = '0.38';
+$VERSION = '0.40';
 
 use MooseX::Types
     -declare => [qw(ArrayRefUri PerlVersion ArrayRefStr)];
