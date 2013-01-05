@@ -72,7 +72,10 @@ sub smokebrew_dir {
 sub perls {
   my $type = shift;
   $type = shift if $type->isa(__PACKAGE__);
-  unless ( $type and $type =~ /^(rel|dev|recent)$/i ) {
+  if ( $type and $type eq 'latest' ) {
+    return;
+  }
+  unless ( $type and $type =~ /^(rel|dev|recent|modern)$/i ) {
     $type =~ s/[^\d\.]+//g if $type;
   }
   return
@@ -87,6 +90,9 @@ sub perls {
       }
       elsif ( $type and $type eq 'recent' ) {
           _is_recent($_);
+      }
+      elsif ( $type and $type eq 'modern' ) {
+          _is_modern($_);
       }
       elsif ( $type ) {
           $_->normal =~ /\Q$type\E$/;
@@ -117,6 +123,14 @@ sub _is_recent {
   return 0 if _is_ancient($pv);
   return 0 if _is_dev($pv);
   return 1 if $pv->numify >= 5.008009;
+  return 0;
+}
+
+sub _is_modern {
+  my $pv = shift;
+  return 0 if _is_ancient($pv);
+  return 0 if _is_dev($pv);
+  return 1 if $pv->numify >= 5.010000;
   return 0;
 }
 

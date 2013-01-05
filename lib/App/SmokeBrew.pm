@@ -174,6 +174,11 @@ has 'recent' => (
   isa => 'Bool',
 );
 
+has 'modern' => (
+  is => 'ro',
+  isa => 'Bool',
+);
+
 has 'install' => (
   is => 'ro',
   isa => 'Str',
@@ -201,6 +206,7 @@ sub _build__perls {
   $arg = 'rel' if $self->stable;
   $arg = 'dev' if $self->devel;
   $arg = 'recent' if $self->recent;
+  $arg = 'modern' if $self->modern;
   $arg = $self->install if $self->install;
   return [ grep { $_ ne '5.6.0' and $_  ne '5.8.0' } App::SmokeBrew::Tools->perls( $arg ) ];
 }

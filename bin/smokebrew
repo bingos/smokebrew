@@ -152,7 +152,8 @@ CPAN.
 This will indicate that you wish to only install C<recent> perls, which are stable perls that are greater than or
 equal to C<5.8.9>. At the time of writing these were:
 
-  5.8.9, 5.10.0, 5.10.1, 5.12.0 and 5.12.1
+  5.8.9, 5.10.0, 5.10.1, 5.12.0, 5.12.1, 5.12.2, 5.12.3, 5.12.4, 5.12.5, 5.14.0, 5.14.1, 5.14.2,
+  5.14.3, 5.16.0, 5.16.1 and 5.16.2
 
 =item C<--stable>
 
@@ -164,6 +165,14 @@ Examples:
   5.8.9
   5.10.1
   5.12.1
+
+=item C<--modern>
+
+This will indicate that you wish to only install C<modern> perls, which are stable perls that are greater than or
+equal to C<5.10.0>. At the time of writing these were:
+
+  5.10.0, 5.10.1, 5.12.0, 5.12.1, 5.12.2, 5.12.3, 5.12.4, 5.12.5, 5.14.0, 5.14.1, 5.14.2,
+  5.14.3, 5.16.0, 5.16.1 and 5.16.2
 
 =item C<--devel>
 
