@@ -15,6 +15,7 @@ inc/Module/Install/ReadmeFromPod.pm
 inc/Module/Install/Scripts.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
+lib/smokebrew.pm
 lib/App/SmokeBrew.pm
 lib/App/SmokeBrew/BuildPerl.pm
 lib/App/SmokeBrew/IniFile.pm
