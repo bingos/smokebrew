@@ -7,7 +7,7 @@ name 'smokebrew';
 author 'Chris Williams <chris@bingosnet.co.uk>';
 version_from 'lib/App/SmokeBrew.pm';
 abstract_from 'bin/smokebrew';
-readme_from 'bin/smokebrew';
+readme_from 'lib/smokebrew.pm';
 license 'perl';
 auto_license holder => 'Chris Williams';
 perl_version '5.006';
