@@ -1,10 +1,9 @@
 package App::SmokeBrew::Plugin::Null;
 
+#ABSTRACT: A smokebrew plugin for does nothing.
+
 use strict;
 use warnings;
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 use Moose;
 
@@ -20,11 +19,7 @@ __PACKAGE__->meta->make_immutable;
 
 qq[Smokin'];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::Plugin::Null - A smokebrew plugin for does nothing.
+=pod
 
 =head1 SYNOPSIS
 
@@ -45,16 +40,6 @@ This plugin merely returns when C<configure> is called, leaving the given perl i
 Returns true as soon as it is called.
 
 =back
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

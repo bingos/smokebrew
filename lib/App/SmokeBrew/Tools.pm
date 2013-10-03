@@ -1,5 +1,7 @@
 package App::SmokeBrew::Tools;
 
+#ABSTRACT: Various utility functions for smokebrew
+
 use strict;
 use warnings;
 use Archive::Extract;
@@ -9,9 +11,6 @@ use List::MoreUtils qw[uniq];
 use Module::CoreList;
 use Perl::Version;
 use URI;
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 my @mirrors = (
   'http://www.cpan.org/',
@@ -181,11 +180,7 @@ sub devel_perl {
 
 qq[Smoke tools look what's inside of you];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::Tools - Various utility functions for smokebrew
+=pod
 
 =head1 SYNOPSIS
 
@@ -270,16 +265,6 @@ Takes one parameter a perl version.
 Returns the version with the C<perl-> prefix.
 
 =back
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

@@ -1,18 +1,13 @@
 package smokebrew;
 
+#ABSTRACT: Automated Perl building and installation for CPAN Testers
+
 use strict;
 use warnings;
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 1;
 
-__END__
-
-=head1 NAME
-
-smokebrew - Automated Perl building and installation for CPAN Testers
+=pod
 
 =head1 SYNOPSIS
 
@@ -386,16 +381,6 @@ eg. L<CPANPLUS::YACSmoke>.
   [Random::Plugin]
 
   someopt = foobar
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 KUDOS
 

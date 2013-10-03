@@ -1,5 +1,7 @@
 package App::SmokeBrew::BuildPerl;
 
+#ABSTRACT: build and install a particular version of Perl
+
 use strict;
 use warnings;
 use App::SmokeBrew::Tools;
@@ -13,9 +15,6 @@ use Cwd         qw[chdir cwd];
 use IPC::Cmd    qw[run can_run];
 use File::Path  qw[mkpath rmtree];
 use File::pushd qw[pushd];
-use vars        qw[$VERSION];
-
-$VERSION = '0.44';
 
 use Moose;
 use Moose::Util::TypeConstraints;
@@ -154,11 +153,7 @@ __PACKAGE__->meta->make_immutable;
 
 qq[Building a perl];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::BuildPerl - build and install a particular version of Perl
+=pod
 
 =head1 SYNOPSIS
 
@@ -265,16 +260,6 @@ The C<builddir> is used for the first five processes. Installation is made into 
 directory.
 
 =back
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

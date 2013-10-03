@@ -1,5 +1,7 @@
 package App::SmokeBrew;
 
+#ABSTRACT: The guts of smokebrew
+
 use strict;
 use warnings;
 use Pod::Usage;
@@ -12,9 +14,6 @@ use Module::Pluggable search_path => 'App::SmokeBrew::Plugin';
 use File::Spec;
 use Cwd;
 use Getopt::Long;
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 my @mirrors = (
   'http://www.cpan.org/',
@@ -295,11 +294,7 @@ sub _perl_exe {
 
 q[Smokebrew, look what's inside of you];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew - The guts of smokebrew
+=pod
 
 =head1 SYNOPSIS
 
@@ -320,16 +315,6 @@ This method is called by L<smokebrew> to do all the work.
 =head2 C<get_config_from_file>
 
 This method is required by L<MooseX::ConfigFromFile> to load the C<configfile>.
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

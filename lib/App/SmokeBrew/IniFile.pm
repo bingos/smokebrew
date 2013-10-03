@@ -1,11 +1,10 @@
 package App::SmokeBrew::IniFile;
 
+#ABSTRACT: Parse the smokebrew configuration file
+
 use strict;
 use warnings;
 use base 'Config::INI::Reader';
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 sub set_value {
   my ($self, $name, $value) = @_;
@@ -25,11 +24,7 @@ sub set_value {
 
 qq[Smokin'];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::IniFile - Parse the smokebrew configuration file
+=pod
 
 =head1 SYNOPSIS
 
@@ -74,16 +69,6 @@ times the INI file it will become an C<arrayref>.
            }
 
 =back
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 KUDOS
 

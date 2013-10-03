@@ -1,10 +1,9 @@
 package App::SmokeBrew::Plugin;
 
+#ABSTRACT: A Moose role for smokebrew plugins
+
 use strict;
 use warnings;
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 use Moose::Role;
 use Moose::Util::TypeConstraints;
@@ -70,11 +69,7 @@ no Moose::Role;
 
 qq[Smokin'];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::Plugin - A Moose role for smokebrew plugins
+=pod
 
 =head1 SYNOPSIS
 
@@ -157,16 +152,6 @@ Called by L<smokebrew> to configure the given perl for CPAN Testing.
 L<App::SmokeBrew> will pass any options it finds in a named section of the configuration file for a
 plugin when it a new plugin instance. See L<smokebrew> for details. You are expected to document any options
 that may be passed to your plugin in this manner.
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

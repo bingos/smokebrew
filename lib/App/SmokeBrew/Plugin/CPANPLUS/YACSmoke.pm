@@ -1,5 +1,7 @@
 package App::SmokeBrew::Plugin::CPANPLUS::YACSmoke;
 
+#ABSTRACT: A smokebrew plugin for CPANPLUS::YACSmoke based smokers
+
 use strict;
 use warnings;
 use App::SmokeBrew::Tools;
@@ -10,9 +12,6 @@ use File::Path            qw[rmtree mkpath];
 use File::pushd           qw[pushd];
 use IPC::Cmd              qw[run can_run];
 use Log::Message::Simple  qw[msg error];
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 use Moose;
 
@@ -307,11 +306,7 @@ __PACKAGE__->meta->make_immutable;
 
 qq[Smokin'];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::Plugin::CPANPLUS::YACSmoke - A smokebrew plugin for CPANPLUS::YACSmoke based smokers
+=pod
 
 =head1 SYNOPSIS
 
@@ -334,16 +329,6 @@ under the given C<prefix> directory with a directory for each perl version.
 Called by L<smokebrew> to perform the CPAN Testing configuration.
 
 =back
-
-=head1 AUTHOR
-
-Chris C<BinGOs> Williams
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
 
 =head1 SEE ALSO
 

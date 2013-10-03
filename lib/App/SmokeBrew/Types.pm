@@ -1,10 +1,9 @@
 package App::SmokeBrew::Types;
 
+#ABSTRACT: Moose types for smokebrew
+
 use strict;
 use warnings;
-use vars qw[$VERSION];
-
-$VERSION = '0.44';
 
 use MooseX::Types
     -declare => [qw(ArrayRefUri PerlVersion ArrayRefStr)];
@@ -40,11 +39,7 @@ coerce( 'ArrayRefStr', from 'Str', via { [ $_ ] } );
 
 qq[Smokin'];
 
-__END__
-
-=head1 NAME
-
-App::SmokeBrew::Types - Moose types for smokebrew
+=pod
 
 =head1 SYNOPSIS
 
@@ -100,17 +95,9 @@ Coerces from C<Str>.
 
 =back
 
-=head1 AUTHOR
+=head1 KUDOS
 
-Chris C<BinGOs> Williams
-
-with thanks to Florian Ragwitz for the L<MooseX::Types::URI> sugar.
-
-=head1 LICENSE
-
-Copyright E<copy> Chris Williams
-
-This module may be used, modified, and distributed under the same terms as Perl itself. Please see the license that came with your Perl distribution for details.
+Thanks to Florian Ragwitz for the L<MooseX::Types::URI> sugar.
 
 =head1 SEE ALSO
 
