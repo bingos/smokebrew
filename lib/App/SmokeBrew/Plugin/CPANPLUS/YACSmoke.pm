@@ -28,7 +28,7 @@ has '_cpanplus' => (
 sub _build__cpanplus {
   my $self = shift;
   $self->builddir->mkpath;
-  my $default = 'B/BI/BINGOS/CPANPLUS-0.9003.tar.gz';
+  my $default = 'B/BI/BINGOS/CPANPLUS-0.9142.tar.gz';
   my $path;
   my $ff = File::Fetch->new( uri => 'http://cpanidx.org/cpanidx/yaml/mod/CPANPLUS' );
   my $stat = $ff->fetch( to => $self->builddir->absolute );
