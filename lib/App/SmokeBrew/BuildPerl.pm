@@ -110,6 +110,7 @@ sub build_perl {
     my @conf_opts = $self->perlargs;
     push @conf_opts, '-Dusedevel' if $self->is_dev_release();
     unshift @conf_opts, '-Dprefix=' . $prefix;
+    local $ENV{MAKE} = $self->make;
     my $cmd = [ './Configure', '-des', @conf_opts ];
     return unless scalar run( command => $cmd,
                          verbose => 1, );
