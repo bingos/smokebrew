@@ -27,7 +27,7 @@ has '_cpanplus' => (
 sub _build__cpanplus {
   my $self = shift;
   $self->builddir->mkpath;
-  my $default = 'B/BI/BINGOS/CPANPLUS-0.9142.tar.gz';
+  my $default = 'B/BI/BINGOS/CPANPLUS-0.9168.tar.gz';
   my $path;
   my $ff = File::Fetch->new( uri => 'http://cpanidx.org/cpanidx/yaml/mod/CPANPLUS' );
   my $stat = $ff->fetch( to => $self->builddir->absolute );
@@ -142,7 +142,7 @@ BEGIN {
 
     $ENV{'PERL5LIB'} = join $Config{'path_sep'}, grep { defined }
                         $PRIV_LIB,              # to find the boxed config
-                        #$LIB_DIR,               # the CPANPLUS libs
+                        $LIB_DIR,               # the CPANPLUS libs
                         $ENV{'PERL5LIB'};       # original PERL5LIB
 
 }
