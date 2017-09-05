@@ -7,7 +7,7 @@ use warnings;
 use Archive::Extract;
 use File::Fetch;
 use File::Spec;
-use List::MoreUtils qw[uniq];
+use List::Util qw[uniq];
 use Module::CoreList;
 use Perl::Version;
 use URI;
