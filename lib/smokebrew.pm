@@ -83,6 +83,9 @@ This switch may be specified multiple times with different arguments.
 
 This would pass the flags for building a threaded 64bit perl to L<Configure>.
 
+If you specify C<-Dusequadmath> smokebrew will only build perls that actually support quadmath, namely
+perls greater than or equal to v5.21.4
+
 =item C<--mirrors URL>
 
 This is an optional argument. Specify the URL of a CPAN mirror that should be used for retrieving required files

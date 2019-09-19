@@ -15,7 +15,6 @@ use URI;
 my @mirrors = (
   'http://www.cpan.org/',
   'http://cpan.cpantesters.org/',
-  'http://cpan.hexten.net/',
   'ftp://ftp.funet.fi/pub/CPAN/',
 );
 
@@ -116,6 +115,12 @@ sub perls {
   sort keys %Module::CoreList::released;
 }
 
+sub _has_quadmath {
+  my $pv = shift;
+  return 1 if $pv->numify >= 5.021004;
+  return 0;
+}
+
 sub _is_dev {
   my $pv = shift;
   return 0 if _is_ancient($pv);
@@ -176,6 +181,13 @@ sub devel_perl {
   $perl = shift if eval { $perl->isa(__PACKAGE__) };
   return unless $perl;
   return _is_dev( Perl::Version->new( $perl ) );
+}
+
+sub can_quadmath {
+  my $perl = shift;
+  $perl = shift if eval { $perl->isa(__PACKAGE__) };
+  return unless $perl;
+  return _has_quadmath( Perl::Version->new( $perl ) );
 }
 
 qq[Smoke tools look what's inside of you];
@@ -257,6 +269,12 @@ Specifying C<recent> as the parameter will return only the C<stable> perl releas
 Takes one parameter a perl version to check.
 
 Returns true if given perl is a development perl.
+
+=item C<can_quadmath>
+
+Takes one parameter a perl version to check.
+
+Returns true if given perl is able to be built with C<quadmath>.
 
 =item C<perl_version>
 

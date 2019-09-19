@@ -31,6 +31,12 @@ sub is_dev_release {
   return $self->version->version % 2;
 }
 
+sub can_quadmath {
+  my $self = shift;
+  return 0 unless $self->version->numify >= 5.021004;
+  return 1;
+}
+
 no Moose::Role;
 
 qq[Smokin'];
@@ -77,6 +83,10 @@ Returns the normalised perl version prefixed with C<perl->.
 =item C<is_dev_release>
 
 Returns true if the perl version is a C<development> perl release, false otherwise.
+
+=item C<can_quadmath>
+
+Returns true if the perl version is capable of being built with C<quadmath>.
 
 =back
 
