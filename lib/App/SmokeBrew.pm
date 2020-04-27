@@ -279,6 +279,7 @@ sub run {
     }
     msg( "Finished build and configuration for perl ($perl)", $self->verbose );
   }
+  $self->builddir->rmtree() unless $self->noclean();
 }
 
 sub _perl_exe {
