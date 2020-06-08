@@ -156,6 +156,11 @@ has 'make' => (
   isa => 'Str',
 );
 
+has 'jobs' => (
+  is => 'ro',
+  isa => 'Int',
+);
+
 # What perl versions to install
 
 has 'stable' => (
@@ -226,7 +231,7 @@ sub run {
         version   => $perl,
         map { ( $_ => $self->$_ ) }
           grep { defined $self->$_ }
-            qw(builddir prefix verbose noclean nozapman skiptest perlargs mirrors make),
+            qw(builddir prefix verbose noclean nozapman skiptest perlargs mirrors make jobs),
       );
       unless ( $build ) {
         error( "Could not create a build object for ($perl)", $self->verbose );

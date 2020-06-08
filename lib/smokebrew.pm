@@ -130,6 +130,11 @@ smokebrew skip the build process, but enable reconfiguration.
 
 This is an optional argument. Specify the C<make> executable that should be used. The default is C<make>.
 
+=item C<--jobs int>
+
+This is an optional argument. Specify an C<integer> that should be used with C<make -j> to enable parallel builds.
+This will be ignored for when building any perl below v5.19.4.
+
 =back
 
 There are a number of options that allow you to specify what particular perl versions are installed.
