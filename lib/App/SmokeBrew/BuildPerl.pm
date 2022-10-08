@@ -26,8 +26,6 @@ with 'App::SmokeBrew::PerlVersion';
 my @mirrors = (
   'http://www.cpan.org/',
   'http://cpan.cpantesters.org/',
-  'http://cpan.hexten.net/',
-  'ftp://ftp.funet.fi/pub/CPAN/',
 );
 
 has 'builddir' => (

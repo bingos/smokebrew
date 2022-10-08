@@ -15,7 +15,6 @@ use URI;
 my @mirrors = (
   'http://www.cpan.org/',
   'http://cpan.cpantesters.org/',
-  'ftp://ftp.funet.fi/pub/CPAN/',
 );
 
 sub fetch {
