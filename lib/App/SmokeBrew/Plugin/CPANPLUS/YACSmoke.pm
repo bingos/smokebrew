@@ -45,7 +45,7 @@ sub configure {
   $self->builddir->mkpath;
   msg("Fetching '" . $self->_cpanplus . "'", $self->verbose);
   my $loc = 'authors/id/' . $self->_cpanplus;
-  my $fetch = App::SmokeBrew::Tools->fetch( $loc, $self->builddir->absolute, $self->mirrors );
+  my $fetch = App::SmokeBrew::Tools->fetch( $loc, $self->builddir->absolute, [ $self->mirrors ] );
   if ( $fetch ) {
     msg("Fetched to '$fetch'", $self->verbose );
   }
