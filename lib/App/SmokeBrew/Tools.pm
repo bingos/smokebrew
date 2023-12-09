@@ -91,22 +91,22 @@ sub perls {
   map { _format_version($_) }
   grep {
       if ( $type and $type eq 'rel' ) {
-          _is_rel($_) and !_is_ancient($_);
+          _is_rel($_) and !_is_ancient($_) and !_skip($_);
       }
       elsif ( $type and $type eq 'dev' ) {
           _is_dev($_) and !_is_ancient($_);
       }
       elsif ( $type and $type eq 'recent' ) {
-          _is_recent($_);
+          _is_recent($_) and !_skip($_);
       }
       elsif ( $type and $type eq 'modern' ) {
-          _is_modern($_);
+          _is_modern($_) and !_skip($_);
       }
       elsif ( $type ) {
           $_->normal =~ /\Q$type\E$/;
       }
       else {
-          _is_dev($_) or _is_rel($_) and !_is_ancient($_);
+          _is_dev($_) or _is_rel($_) and !_is_ancient($_) and !_skip($_);
       }
   }
   map { Perl::Version->new($_) }
@@ -152,6 +152,13 @@ sub _is_ancient {
   my $pv = shift;
   ( my $numify = $pv->numify ) =~ s/_//g;
   return 1 if $numify < 5.006;
+  return 0;
+}
+
+sub _skip {
+  my $pv = shift;
+  my $nv = $pv->numify;
+  return 1 if $nv == 5.034002 || $nv == 5.036002 || $nv == 5.038001;
   return 0;
 }
 
