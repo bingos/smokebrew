@@ -85,7 +85,7 @@ Constrained to existing in L<Module::CoreList> C<released> and being >= C<5.006>
 
 An arrayref of L<URI> objects.
 
-Coerces from <Str> and C<ArrayRef[Str]> via L<MooseX::Types::URI>
+Coerces from C<Str> and C<ArrayRef[Str]> via L<MooseX::Types::URI>
 
 =item C<ArrayRefStr>
 

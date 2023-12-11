@@ -31,6 +31,7 @@ App::SmokeBrew::Plugin::CPANPLUS::YACSmoke is a L<App::SmokeBrew::Plugin> for L<
 does nothing.
 
 This plugin merely returns when C<configure> is called, leaving the given perl installation un-configured.
+
 =head1 METHODS
 
 =over
